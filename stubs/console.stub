@@ -1,0 +1,17 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Console\Scheduling\Schedule;
+use LaravelZero\Framework\Commands\Command;
+
+class DummyClass extends Command
+{
+    protected $signature = '';
+    protected $description = 'Advent ';
+
+    public function handle()
+    {
+        
+    }
+}
