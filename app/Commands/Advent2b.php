@@ -16,7 +16,7 @@ class Advent2b extends Command
         $position = $input->reduce(function($pos, $move) {
             [$direction, $distance] = explode(' ', $move);
             return match ($direction) {
-                'forward'   => ['x' => $pos['x'] + (int)$distance, 'y' => ($pos['y'] + ($distance * $pos['a'])), 'a' => $pos['a']],
+                'forward'   => ['x' => $pos['x'] + (int)$distance, 'y' => ($pos['y'] + ((int)$distance * $pos['a'])), 'a' => $pos['a']],
                 'up'        => ['x' => $pos['x'], 'y' => $pos['y'], 'a' => $pos['a'] - (int)$distance],
                 'down'      => ['x' => $pos['x'], 'y' => $pos['y'], 'a' => $pos['a'] + (int)$distance]
             };
