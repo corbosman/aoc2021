@@ -13,15 +13,15 @@ class Advent2a extends Command
     {
         $input = collect(file(storage_path('2.txt'), FILE_IGNORE_NEW_LINES));
 
-        $position = $input->reduce(function($position, $move) {
+        $position = $input->reduce(function($pos, $move) {
             [$direction, $distance] = explode(' ', $move);
             return match ($direction) {
-                'forward'   => [$position[0] + (int) $distance, $position[1]],
-                'up'        => [$position[0], $position[1] - (int) $distance],
-                'down'      => [$position[0], $position[1] + (int) $distance]
+                'forward'   => ['x' => $pos['x'] + (int) $distance, 'y' => $pos['y']],
+                'up'        => ['x' => $pos['x'], 'y' => $pos['y'] - (int) $distance],
+                'down'      => ['x' => $pos['x'], 'y' => $pos['y'] + (int) $distance]
             };
-        }, [0, 0]);
+        }, ['x' => 0, 'y' => 0]);
 
-        $this->info($position[0] * $position[1]);
+        $this->info($position['x'] * $position['y']);
     }
 }
