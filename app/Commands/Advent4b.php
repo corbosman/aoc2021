@@ -17,29 +17,20 @@ class Advent4b extends Command
             ->map(fn($board) => $board->map(fn($row) => array_map('intval', preg_split('/\s+/', trim($row))))->values())
             ->toArray();
 
-        $last_board = null;
-        $last_number = null;
+        $number = $winner = null;
         foreach($random as $number) {
-            /* mark the number on the boards */
             $boards = $this->mark($number, $boards);
-
-            /* find all the winning boards */
             $winners = $this->winners($boards);
 
-            /* remove all full boards from the list of boards until we have 1 left */
             foreach($winners as $winner) {
-                if (count($boards) === 1) {
-                    $last_board = $winner;
-                    $last_number = $number;
-                    break 2;
-                };
+                if (count($boards) === 1) break 2;
                 unset($boards[$winner]);
             }
         }
 
-        $unmarked_sum = collect($boards[$last_board])->flatten()->filter()->sum();
+        $unmarked_sum = collect($boards[$winner])->flatten()->filter()->sum();
 
-        $this->info("final score = " . $unmarked_sum * $last_number);
+        $this->info("final score = " . $unmarked_sum * $number);
     }
 
     /**
