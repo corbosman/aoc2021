@@ -22,21 +22,21 @@ class Advent4a extends Command
     }
 
     /**
-     * Play a game of bingo!
+     * Play bingo until we have a winner!
      */
     public function play($random, $boards, $i = 0) : array
     {
         if (($board = $this->winner($boards)) !== null) return [$board, $random[$i-1]];
 
-        $boards = $this->round($random[$i], $boards);
+        $boards = $this->mark($random[$i], $boards);
 
         return $this->play($random, $boards, $i+1);
     }
 
     /**
-     * Play a round of bingo
+     * mark numbers on the boards
      */
-    public function round($number, $boards) : Collection
+    public function mark($number, $boards) : Collection
     {
         return $boards->map(fn($board) => $board->map(fn($row) => array_map(fn($v) => $v === $number ? 'X' : $v, $row)));
     }
