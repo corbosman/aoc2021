@@ -47,15 +47,12 @@ class Advent4a extends Command
     public function winner($boards) : ?Collection
     {
        foreach($boards as $board) {
+           foreach(range(0,4) as $i) {
+               /* check row */
+               if (count(array_filter($board[$i], fn($v) => $v !== 'X')) === 0) return $board;
 
-           /* check each row */
-           foreach($board as $row) {
-               if (count(array_filter($row, fn($v) => $v !== 'X')) === 0) return $board;
-           }
-
-           /* check each column */
-           foreach($board->transpose() as $row) {
-               if (count(array_filter($row, fn($v) => $v !== 'X')) === 0) return $board;
+               /* check column */
+               if (count(array_filter(array_column($board->toArray(), $i), fn($v) => $v !== 'X')) === 0) return $board;
            }
        }
 
