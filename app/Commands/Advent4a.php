@@ -64,9 +64,9 @@ class Advent4a extends Command
      */
     public function read_input() : array
     {
-        $input = collect(file(storage_path('4.txt'), FILE_IGNORE_NEW_LINES));
+        $input = collect(file(storage_path('4e.txt'), FILE_IGNORE_NEW_LINES));
 
-        $random = collect(explode(',', $input[0]))->map(fn($n) => (int)$n);
+        $random = map('intval', explode(',', $input[0]));
 
         $boards = $input
             ->splice(2)                                                                                                                // skip first 2 lines
