@@ -2,7 +2,6 @@
 
 namespace DummyNamespace;
 
-use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
 class DummyClass extends Command
@@ -12,6 +11,6 @@ class DummyClass extends Command
 
     public function handle()
     {
-        
+
     }
 }
