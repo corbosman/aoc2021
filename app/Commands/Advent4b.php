@@ -1,9 +1,6 @@
 <?php
-
 namespace App\Commands;
-
 use LaravelZero\Framework\Commands\Command;
-
 class Advent4b extends Command
 {
     protected $signature = '4b';
