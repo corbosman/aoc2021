@@ -33,7 +33,7 @@ class Advent4b extends Command
         $this->info("final score = " . $unmarked_sum * $number);
     }
 
-    public function winners($boards) : ?array
+    public function winners($boards) : array
     {
         $winners = [];
 
