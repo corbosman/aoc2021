@@ -29,7 +29,7 @@ class Advent3b extends Command
         $digit = $rating === 'o2' ? 1 : 0;
 
         /* get the bits */
-        $bits  = collect(array_map(fn(...$a) => $a, ...$numbers));
+        $bits  = array_map(fn(...$a) => $a, ...$numbers);
 
         /* the median for these number of bits */
         $median = count($numbers) / 2;
