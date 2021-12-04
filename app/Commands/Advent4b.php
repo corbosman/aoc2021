@@ -11,11 +11,14 @@ class Advent4b extends Command
 
     public function handle()
     {
+        $input = collect(file(storage_path('4.txt'), FILE_IGNORE_NEW_LINES));
+        $random = map('intval', explode(',', $input[0]));
+        $boards = $input->splice(2)->filter(fn($l) => $l !== "")->chunk(5)
+            ->map(fn($board) => $board->map(fn($row) => array_map('intval', preg_split('/\s+/', trim($row))))->values())
+            ->toArray();
+
         $last_board = null;
         $last_number = null;
-
-        [$random, $boards] = $this->read_input();
-
         foreach($random as $number) {
             /* mark the number on the boards */
             $boards = $this->mark($number, $boards);
@@ -64,24 +67,5 @@ class Advent4b extends Command
             }
         }
         return $winners;
-    }
-
-    /**
-     * read the input file and return the random numbers and a set of boards
-     */
-    public function read_input() : array
-    {
-        $input = collect(file(storage_path('4.txt'), FILE_IGNORE_NEW_LINES));
-
-        $random = map('intval', explode(',', $input[0]));
-
-        $boards = $input
-            ->splice(2)                                                                                                                // skip first 2 lines
-            ->filter(fn($l) => $l !== "")                                                                                              // remove empty lines
-            ->chunk(5)                                                                                                                 // chop into sections of 5 lines
-            ->map(fn($board) => $board->map(fn($row) => array_map(fn($v) => (int)$v, preg_split('/\s+/', trim($row))))->values())
-            ->toArray();
-
-        return [$random, $boards];
     }
 }
