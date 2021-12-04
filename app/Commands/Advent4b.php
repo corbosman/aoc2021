@@ -12,14 +12,14 @@ class Advent4b extends Command
     public function handle()
     {
         $input = collect(file(storage_path('4.txt'), FILE_IGNORE_NEW_LINES));
-        $random = map('intval', explode(',', $input[0]));
+        $numbers = map('intval', explode(',', $input[0]));
         $boards = $input->splice(2)->filter(fn($l) => $l !== "")->chunk(5)
             ->map(fn($board) => $board->map(fn($row) => array_map('intval', preg_split('/\s+/', trim($row))))->values())
             ->toArray();
 
         $number = $winner = null;
-        foreach($random as $number) {
-            $boards = $this->mark($number, $boards);
+        foreach($numbers as $number) {
+            $boards = map(fn($board) => map(fn($row) => map(fn($v) => $v === $number ? false : $v, $row), $board), $boards);
             $winners = $this->winners($boards);
 
             foreach($winners as $winner) {
@@ -33,17 +33,6 @@ class Advent4b extends Command
         $this->info("final score = " . $unmarked_sum * $number);
     }
 
-    /**
-     * mark numbers on the boards
-     */
-    public function mark($number, $boards) : array
-    {
-        return map(fn($board) => map(fn($row) => map(fn($v) => $v === $number ? false : $v, $row), $board), $boards);
-    }
-
-    /**
-     * Check if any board is a winner
-     */
     public function winners($boards) : ?array
     {
         $winners = [];
