@@ -17,7 +17,7 @@ function rating($numbers, $rating, $pos = 0) : int
     $digit   = $rating === 'o2' ? 1 : 0;
     $bits    = map(fn(...$a) => $a, ...$numbers);
     $median  = count($numbers) / 2;
-    $bit     = array_sum($bits[$pos]) >= $median ? (int)$digit : (int)!$digit;
+    $bit     = sum($bits[$pos]) >= $median ? (int)$digit : (int)!$digit;
     $numbers = $numbers->filter(fn($n) => $n[$pos] === $bit)->values();
 
     return rating($numbers, $rating, $pos+1);
