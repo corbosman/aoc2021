@@ -18,7 +18,7 @@ function points ($x1, $y1, $x2, $y2) : array
 {
     $dx=$x2-$x1;
     $dy=$y2-$y1;
-    $steps = gcd($dx, $dy);
+    $steps = max(abs($x1-$x2), abs($y1-$y2));
     $points = [];
     for ($i=0; $i<=$steps; $i++) {
         $x = $x1+$i*$dx/$steps;
@@ -26,12 +26,5 @@ function points ($x1, $y1, $x2, $y2) : array
         $points[] = [$x, $y];
     }
     return $points;
-}
-
-function gcd($a,$b) : int
-{
-    $a = abs($a);
-    $b = abs($b);
-    return $a === 0 ? $b : ($b === 0 ? $a : gcd(min($a,$b),max($a,$b) % min($a,$b)));
 }
 
