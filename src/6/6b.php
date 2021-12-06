@@ -8,8 +8,8 @@ $fish  = array_fill(0,9,0);
 foreach(json_decode('['.file('input.txt')[0].']', true) as $i) $fish[$i]++;
 
 for($i=1; $i <= DAYS; $i++) {
-    $breading = array_shift($fish);
-    $fish[6] += $breading;
-    $fish[8] = $breading;
+    $breeding = array_shift($fish);
+    $fish[6] += $breeding;
+    $fish[8] = $breeding;
 }
 output("fish=". sum($fish));
