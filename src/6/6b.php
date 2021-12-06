@@ -2,7 +2,7 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-const DAYS = 80;
+const DAYS = 256;
 
 $fish  = array_fill(0,9,0);
 foreach(json_decode('['.file('input.txt')[0].']', true) as $i) $fish[$i]++;
