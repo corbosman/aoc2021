@@ -13,4 +13,4 @@ for($i=1; $i <= DAYS; $i++) {
     $fish[6] += $breading;
     $fish[8] = $breading;
 }
-output("fish=". array_sum($fish));
+output("fish=". sum($fish));
