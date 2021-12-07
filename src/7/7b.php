@@ -9,6 +9,7 @@ $avg = (int)floor($crabs->avg());
 
 $best = fuel($crabs,$avg);
 
+/*
 for ($i=$avg-1; $i >= $min; $i--) {
     $fuel = fuel($crabs, $i);
     if ($fuel > $best) break;
@@ -20,6 +21,7 @@ for ($i=$avg+1; $i <= $min; $i++) {
     if ($fuel > $best) break;
     $best = $fuel;
 }
+*/
 
 output("best=" . $best);
 
