@@ -9,18 +9,6 @@ $avg = (int)round($crabs->avg());
 
 $best = min(fuel($crabs, (int)floor($crabs->avg())), fuel($crabs, (int)ceil($crabs->avg())));
 
-//for ($i=$avg-1; $i >= $min; $i--) {
-//    $fuel = fuel($crabs, $i);
-//    if ($fuel > $best) break;
-//    $best = $fuel;
-//}
-//
-//for ($i=$avg+1; $i <= $min; $i++) {
-//    $fuel = fuel($crabs, $i);
-//    if ($fuel > $best) break;
-//    $best = $fuel;
-//}
-
 output("best=" . $best);
 
 function fuel($crabs, $pos) : int
