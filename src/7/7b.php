@@ -3,8 +3,6 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 $crabs = collect(json_decode('['.file('input_e.txt')[0].']', true));
-$min = $crabs->min();
-$max = $crabs->max();
 $avg = (int)round($crabs->avg());
 
 $best = min(fuel($crabs, (int)floor($crabs->avg())), fuel($crabs, (int)ceil($crabs->avg())));
