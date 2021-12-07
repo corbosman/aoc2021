@@ -5,7 +5,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 $crabs = collect(json_decode('['.file('input.txt')[0].']', true));
 $min = $crabs->min();
 $max = $crabs->max();
-$avg = (int)floor($crabs->avg());
+$avg = (int)round($crabs->avg());
 
 $best = fuel($crabs,$avg);
 
