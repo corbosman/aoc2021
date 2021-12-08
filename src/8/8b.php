@@ -54,16 +54,16 @@ function decrypt($cipher, $output) : int
 
 /* all deduction rules */
 function a($c, $f) { return find($f['2'][0], $f['3']);}
-function b($c, $f) { return find(str_uniq($f['2'][0].$c['d']), $f['4']);}
-function c($c, $f) { return find(str_uniq($c['a'].$c['b'].$c['d'].$c['e'].$c['f'].$c['g']), $f['7']);}
-function d($c, $f) { return find(str_uniq($f['2'][0].$c['a'].$c['g']), $f['5']); }
-function e($c, $f) { return find(str_uniq($f['2'][0].$c['a'].$c['b'].$c['d'].$c['g']),$f['7']);}
-function f($c, $f) { return find(str_uniq($c['a'].$c['b'].$c['d'].$c['e'].$c['g']), $f['6']);}
-function g($c, $f) { return find(str_uniq($f['4'][0].$f['3'][0]), $f['6']);}
+function b($c, $f) { return find($f['2'][0].$c['d'], $f['4']);}
+function c($c, $f) { return find($c['a'].$c['b'].$c['d'].$c['e'].$c['f'].$c['g'], $f['7']);}
+function d($c, $f) { return find($f['2'][0].$c['a'].$c['g'], $f['5']); }
+function e($c, $f) { return find($f['2'][0].$c['a'].$c['b'].$c['d'].$c['g'],$f['7']);}
+function f($c, $f) { return find($c['a'].$c['b'].$c['d'].$c['e'].$c['g'], $f['6']);}
+function g($c, $f) { return find($f['4'][0].$f['3'][0], $f['6']);}
 
 function find($str, $freq) {
     foreach($freq as $possible) {
-        $diff = str_diff($str, $possible);
+        $diff = str_diff(str_uniq($str), $possible);
         if (strlen($diff) === 1) return $diff[0];
     }
 }
