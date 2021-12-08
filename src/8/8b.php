@@ -15,7 +15,7 @@ output("count={$count}");
 
 /* -------------------------------------- */
 
-/* find the cipher by applying deduction rules */
+/* find the substitution cipher by applying deduction rules */
 function find_cipher($input) : array
 {
     $cipher = array_fill_keys(range('a','g'), null);     // substitution cipher
