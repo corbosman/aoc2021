@@ -18,10 +18,10 @@ output("count={$count}");
 /* find the cipher by applying deduction rules */
 function find_cipher($input) : array
 {
-    $cipher = array_fill_keys(range('a','g'), null);        // substitution cipher
+    $cipher = array_fill_keys(range('a','g'), null);     // substitution cipher
     $freq = $input->groupBy(fn($i)=>strlen($i));         // frequency analyses of each letter
 
-    /* perform a set of rules to find our cipher */
+    /* perform a set of rules to fill our cipher */
     foreach(['a','g','d','b','e','f','c'] as $method) {
         $cipher[$method] = $method($cipher, $freq);
     }
