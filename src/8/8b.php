@@ -48,8 +48,7 @@ function decrypt($cipher, $output) : int
 
     return (int) $output->reduce(function($carry, $code) use ($cipher, $digits) {
         $digit = collect(map(fn($i)=>$cipher[$i], str_split($code)))->sort()->implode(null);    // character representation of this digit
-        $carry .= $digits[$digit];                                                              // lookup digit from table
-        return $carry;
+        return $carry . $digits[$digit];
     }, '');
 }
 
