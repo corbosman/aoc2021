@@ -87,8 +87,6 @@ function g($cipher, $counter) : array
             return $cipher;
         }
     }
-    output('g failure!');
-    exit;
 }
 
 /* d can be deduced from merging digit 1 (2 letters), with known letters a and g. Compare with all 5 letter numbers, and if there is 1 letter difference, that is d */
@@ -102,8 +100,6 @@ function d($cipher, $counter) : array
             return $cipher;
         }
     }
-    output('d failure!');
-    exit;
 }
 
 /* b can be deduced by combining digit 1 (2 letters), with known letter d. Remaining letter for digit 4 is b */
@@ -133,8 +129,6 @@ function f($cipher, $counter) : array
             return $cipher;
         }
     }
-    output('rule_cf failure!');
-    exit;
 }
 
 /* c can deduced by checking which letter is missing */
