@@ -35,7 +35,7 @@ function find_cipher($input) : array
 
     /* perform a set of rules to find our cipher */
     foreach(['a','g','d','b','e','f','c'] as $method) {
-        $cipher = $method($cipher, $counter);
+        $cipher[$method] = $method($cipher, $counter);
     }
 
     return array_flip($cipher);
@@ -69,72 +69,65 @@ function decrypt($output, $cipher) : int
 /* all deduction rules */
 
 /* a can be deduced from digit 1 and 7. */
-function a($cipher, $counter) : array
+function a($cipher, $counter) : string
 {
-    $cipher['a'] = array_values(array_diff(str_split($counter['3']->first()), str_split($counter['2']->first())))[0];
-    return $cipher;
+    return array_values(array_diff(str_split($counter['3']->first()), str_split($counter['2']->first())))[0];
 }
 
 /* g can be deduced from merging digits 4 (4 letters) and 7 (3 letters). Compare with all 6 letter numbers, and if there is 1 letter difference, that is the g */
-function g($cipher, $counter) : array
+function g($cipher, $counter) : string
 {
     $combined = array_unique(array_merge(str_split($counter['4']->first()), str_split($counter['3']->first())));
 
     foreach($counter['6'] as $possible_g) {
         $diff = array_diff(str_split($possible_g), $combined);
         if (count($diff) === 1) {
-            $cipher['g'] = array_values($diff)[0];
-            return $cipher;
+            return array_values($diff)[0];
         }
     }
 }
 
 /* d can be deduced from merging digit 1 (2 letters), with known letters a and g. Compare with all 5 letter numbers, and if there is 1 letter difference, that is d */
-function d($cipher, $counter) : array
+function d($cipher, $counter) : string
 {
     $combined = array_merge(str_split($counter['2']->first()), [$cipher['a'], $cipher['g']]);
     foreach($counter['5'] as $possible_d) {
         $diff = array_diff(str_split($possible_d), $combined);
         if (count($diff) === 1) {
-            $cipher['d'] = array_values($diff)[0];
-            return $cipher;
+            return array_values($diff)[0];
         }
     }
 }
 
 /* b can be deduced by combining digit 1 (2 letters), with known letter d. Remaining letter for digit 4 is b */
-function b($cipher, $counter) : array
+function b($cipher, $counter) : string
 {
     $combined = array_merge(str_split($counter['2']->first()), [$cipher['d']]);
-    $cipher['b'] = array_values(array_diff(str_split($counter['4']->first()), $combined))[0];
-    return $cipher;
+    return array_values(array_diff(str_split($counter['4']->first()), $combined))[0];
 }
 
 /* e can be deduced by combining digit 1 (2 letters) with known letters abdg and comparing that with digit 8 (7 letters). */
-function e($cipher, $counter) : array
+function e($cipher, $counter) : string
 {
     $combined = array_merge(str_split($counter['2']->first()), [$cipher['a'],$cipher['b'],$cipher['d'],$cipher['g']]);
-    $cipher['e'] = array_values(array_diff(str_split($counter['7']->first()), $combined))[0];
-    return $cipher;
+    return array_values(array_diff(str_split($counter['7']->first()), $combined))[0];
 }
 
 /* f can be deduced by checking 6 letter digits with known letters abdeg.  */
-function f($cipher, $counter) : array
+function f($cipher, $counter) : string
 {
     $combined = [$cipher['a'],$cipher['b'],$cipher['d'],$cipher['e'],$cipher['g']];
     foreach($counter['6'] as $possible_f) {
         $diff = array_diff(str_split($possible_f), $combined);
         if (count($diff) === 1) {
-            $cipher['f'] = array_values($diff)[0];
-            return $cipher;
+            return array_values($diff)[0];
         }
     }
 }
 
 /* c can deduced by checking which letter is missing */
-function c($cipher, $counter) : array
+function c($cipher, $counter) : string
 {
     $combined = [$cipher['a'],$cipher['b'],$cipher['d'],$cipher['e'],$cipher['f'],$cipher['g']];
-    $cipher['c'] = array_values(array_diff(str_split($counter['7']->first()), $combined))[0];
-    return $cipher;
+    return array_values(array_diff(str_split($counter['7']->first()), $combined))[0];
 }
