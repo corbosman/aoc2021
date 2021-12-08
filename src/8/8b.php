@@ -7,25 +7,13 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $count = collect(file('input.txt', FILE_IGNORE_NEW_LINES))
     ->map(fn($i)=>preg_split('/ \| /', $i))
-    ->map(fn($i)=>decode(collect(explode(' ', $i[0])), collect(explode(' ', $i[1]))))
+    ->map(fn($i)=>[collect(explode(' ', $i[0])), collect(explode(' ', $i[1]))])
+    ->map(fn($i)=>decrypt(find_cipher($i[0]), $i[1]))
     ->sum();
 
 output("count={$count}");
 
 /* -------------------------------------- */
-
-
-/**
- * Decode a line of input, returns decoded output value
- *
- * @param $input
- * @param $output
- * @return int
- */
-function decode($input, $output) : int
-{
-    return decrypt($output, find_cipher($input));
-}
 
 /* find the cipher by applying deduction rules */
 function find_cipher($input) : array
@@ -42,7 +30,7 @@ function find_cipher($input) : array
 }
 
 /* decrypt an output string using the cipher */
-function decrypt($output, $cipher) : int
+function decrypt($cipher, $output) : int
 {
     /* our plaintext digits */
     $digits = [
