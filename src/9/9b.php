@@ -34,13 +34,15 @@ function flood(&$grid, $point, $width, $height) : int
     $i = $point[0];
     $j = $point[1];
 
+    if ($i < 0 or $j < 0 or $j > $width or $i > $height or $grid[$i][$j] == 9) return 0;
+
     $score = 1;
     $grid[$i][$j] = 9;
 
-    if ($i != 0 and $grid[$i-1][$j] != 9) $score += flood($grid, [$i-1, $j], $width, $height);
-    if ($j != 0 and $grid[$i][$j-1] != 9) $score += flood($grid, [$i, $j-1], $width, $height);
-    if ($j != $width and $grid[$i][$j+1] != 9) $score += flood($grid, [$i, $j+1], $width, $height);
-    if ($i != $height and $grid[$i+1][$j] != 9) $score += flood($grid, [$i+1, $j], $width, $height);
+    $score += flood($grid, [$i-1, $j], $width, $height);
+    $score += flood($grid, [$i, $j-1], $width, $height);
+    $score += flood($grid, [$i, $j+1], $width, $height);
+    $score += flood($grid, [$i+1, $j], $width, $height);
 
     return $score;
 }
