@@ -8,7 +8,11 @@ $height = count($input)-1;
 
 $output = $input->mapWithKeys(
     fn($r,$i) => [
-        $i => $r->filter(fn($h, $j) => ($i == 0 or $h < $input[$i-1][$j]) and ($j == 0 or $h < $input[$i][$j-1]) and ($j == $width or $h < $input[$i][$j+1]) and ($i == $height or $h < $input[$i+1][$j]))
+        $i => $r->filter(
+            fn($h, $j) => ($i == 0 or $h < $input[$i-1][$j]) and
+                          ($j == 0 or $h < $input[$i][$j-1]) and
+                          ($j == $width or $h < $input[$i][$j+1]) and
+                          ($i == $height or $h < $input[$i+1][$j]))
     ]
 )->flatten()->map(fn($i)=>$i+1)->sum();
 
