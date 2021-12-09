@@ -35,12 +35,12 @@ function flood(&$grid, $point, $width, $height) : int
     $j = $point[1];
 
     $score = 1;
-    $grid[$i][$j] = null;
+    $grid[$i][$j] = 9;
 
-    if ($i != 0 and $grid[$i-1][$j] != 9 and $grid[$i-1][$j] != null) $score += flood($grid, [$i-1, $j], $width, $height);
-    if ($j != 0 and $grid[$i][$j-1] != 9 and $grid[$i][$j-1] != null) $score += flood($grid, [$i, $j-1], $width, $height);
-    if ($j != $width and $grid[$i][$j+1] != 9 and $grid[$i][$j+1] != null) $score += flood($grid, [$i, $j+1], $width, $height);
-    if ($i != $height and $grid[$i+1][$j] != 9 and $grid[$i+1][$j] != null) $score += flood($grid, [$i+1, $j], $width, $height);
+    if ($i != 0 and $grid[$i-1][$j] != 9) $score += flood($grid, [$i-1, $j], $width, $height);
+    if ($j != 0 and $grid[$i][$j-1] != 9) $score += flood($grid, [$i, $j-1], $width, $height);
+    if ($j != $width and $grid[$i][$j+1] != 9) $score += flood($grid, [$i, $j+1], $width, $height);
+    if ($i != $height and $grid[$i+1][$j] != 9) $score += flood($grid, [$i+1, $j], $width, $height);
 
     return $score;
 }
