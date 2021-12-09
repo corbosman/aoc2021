@@ -34,6 +34,7 @@ function flood(&$grid, $point, $width, $height) : int
     $i = $point[0];
     $j = $point[1];
 
+    /* done if we're out of bounds or this grid point is not possible */
     if ($i < 0 or $j < 0 or $j > $width or $i > $height or $grid[$i][$j] == 9) return 0;
 
     $score = 1;
