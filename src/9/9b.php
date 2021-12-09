@@ -12,6 +12,7 @@ $output     = $basins->reduce(fn($c,$b)=>$c*$b,1);
 
 output($output);
 
+
 function find_low_points($input, $width, $height) : ArrayAccess
 {
     $coordinates = [];
