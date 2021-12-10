@@ -14,8 +14,7 @@ foreach($input as $line) {
         if (in_array($nav, $brackets)) {
             $stack->push($nav);
         } else {
-            $last = $stack->pop();
-            if ($last !== $brackets[$nav]) {
+            if ($stack->pop() !== $brackets[$nav]) {
                 $errors->push($score[$nav]);
                 break;
             }
