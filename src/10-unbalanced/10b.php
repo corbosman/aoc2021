@@ -2,7 +2,7 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-$input = collect(file('input_e.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>collect(str_split($i)));
+$input = collect(file('input.txt', FILE_IGNORE_NEW_LINES));
 
 $score = $input->reduce(function($incomplete, $line) {
             $stack = collect();
