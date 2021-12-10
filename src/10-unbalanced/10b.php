@@ -11,11 +11,10 @@ $score = $input->reduce(function($incomplete, $line) {
         elseif ($stack->pop() !== pair($chr)) return $incomplete;
     }
     return $incomplete->push($stack);
-}, collect())->map(fn($line) => $line->reverse()->reduce(function($score, $chr) {
-    return ($score * 5) + match($chr) {
-            '(' => 1, '[' => 2, '{' => 3, '<' => 4
-        };
-}, 0))->sort()->values();;
+}, collect())
+    ->map(fn($line) => $line->reverse()->reduce(fn($score, $chr) => ($score * 5) + match($chr) { '(' => 1, '[' => 2, '{' => 3, '<' => 4 }, 0))
+    ->sort()
+    ->values();
 
 output($score[count($score)/2]);
 
