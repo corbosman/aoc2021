@@ -4,18 +4,18 @@ use Tightenco\Collect\Support\Collection;
 require __DIR__ . '/../../vendor/autoload.php';
 
 $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES));
-
 $winner = (new Parser)->parse($input);
 
 output($winner);
+
 
 class Parser
 {
     public function parse($input)
     {
-        $incomplete   = $this->discard($input);       // discard all lines with errors
-        $completions  = $this->complete($incomplete); // find completions for the incomplete strings
-        $score        = $this->score($completions);   // calculate scores for completions
+        $incomplete   = $this->discard($input);
+        $completions  = $this->complete($incomplete);
+        $score        = $this->score($completions);
 
         return $score->sort()->values()[$score->count() / 2];
     }
