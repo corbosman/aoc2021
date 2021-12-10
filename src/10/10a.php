@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-use Tightenco\Collect\Support\Collection;
 require __DIR__ . '/../../vendor/autoload.php';
 
 $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
