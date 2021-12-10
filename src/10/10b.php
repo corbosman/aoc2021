@@ -13,53 +13,37 @@ class Parser
 {
     public function parse($input)
     {
-        $incomplete   = $this->discard($input);
-        $completions  = $this->complete($incomplete);
-        $score        = $this->score($completions);
+        $incomplete   = $this->process($input);
+        $score        = $this->score($incomplete);
 
         return $score->sort()->values()[$score->count() / 2];
     }
 
-    private function discard($array) : Collection
+    private function process($array) : Collection
     {
-        return $array->filter(function($line) {
+        $processed  = collect();
+
+        foreach($array as $line) {
             $stack = collect();
-            foreach(str_split($line) as $nav) {
-                if (str_contains('({[<', $nav)) {
-                    $stack->push($nav);
-                } else if ($stack->pop() !== $this->match($nav)) {
-                    return false;
+            foreach(str_split($line) as $chr) {
+                if (str_contains('({[<', $chr)) {
+                    $stack->push($chr);
+                } else {
+                    if ($stack->pop() !== $this->match($chr)) continue 2;
                 }
             }
-            return true;
-        });
-    }
-
-    private function complete($array) : Collection
-    {
-       return $array->map(function($line) {
-          return collect(str_split($this->remove_pairs($line)))->reverse()->map(fn($c) => $this->match($c));
-       });
+            $processed->push($stack);
+        }
+        return $processed;
     }
 
     public function score($array) : Collection
     {
-        return $array->map(fn($line) => $line->reduce(function($score, $chr) {
+        return $array->map(fn($line) => $line->reverse()->reduce(function($score, $chr) {
            return ($score * 5) + match($chr) {
-               ')' => 1, ']' => 2, '}' => 3, '>' => 4
+               '(' => 1, '[' => 2, '{' => 3, '<' => 4
            };
         }, 0))->values();
-    }
-
-    private function remove_pairs($str) : string
-    {
-        do {
-            $str = str_replace('[]', '', $str, $count_1);
-            $str = str_replace('{}', '', $str, $count_2);
-            $str = str_replace('<>', '', $str, $count_3);
-            $str = str_replace('()', '', $str, $count_4);
-        } while ($count_1 + $count_2 + $count_3 + $count_4 > 0);
-        return $str;
     }
 
     private function match($chr) : string
