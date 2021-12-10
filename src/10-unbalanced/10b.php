@@ -7,11 +7,8 @@ $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES));
 $score = $input->reduce(function($incomplete, $line) {
     $stack = collect();
     foreach(str_split($line) as $chr) {
-        if (str_contains('({[<', $chr)) {
-            $stack->push($chr);
-        } else {
-            if ($stack->pop() !== pair($chr)) return $incomplete;
-        }
+        if (str_contains('({[<', $chr)) $stack->push($chr);
+        elseif ($stack->pop() !== pair($chr)) return $incomplete;
     }
     return $incomplete->push($stack);
 }, collect())->map(fn($line) => $line->reverse()->reduce(function($score, $chr) {
