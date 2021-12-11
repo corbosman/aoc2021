@@ -24,7 +24,6 @@ function flash($octopuses)
                 foreach(range(-1,1) as $d1) {
                     foreach(range(-1,1) as $d2) {
                         if ($d1 === 0 and $d2 === 0) continue;
-
                         if ($x + $d1 >= 0 and $y + $d2 >= 0 and $x + $d1 < SIZE and $y + $d2 < SIZE and $octopuses[$x+$d1][$y+$d2] !== 0) {
                             $octopuses[$x + $d1][$y + $d2] += 1;
                         }
