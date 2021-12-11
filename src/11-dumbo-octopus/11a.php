@@ -11,7 +11,7 @@ $flashes = 0;
 
 for($i=1; $i<=STEPS; $i++) {
     $octopuses->transform(fn($i)=>$i+1);
-    [$$octopuses, $flashes] = flash($octopuses, $flashes);
+    [$octopuses, $flashes] = flash($octopuses, $flashes);
 }
 
 output($flashes);
