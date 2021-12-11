@@ -4,7 +4,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 const SIZE  = 10;
 const STEPS = 100;
-const MAX   = SIZE*SIZE;
 
 $octopuses = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i))->map(fn($i)=>collect(map(fn($j)=>(int)$j, $i)));
 $flashes = 0;
@@ -16,7 +15,7 @@ for($i=1; $i<=STEPS; $i++) {
 
 output($flashes);
 
-function flash($octopuses, $flashes)
+function flash($octopuses, $flashes) : array
 {
     do {
         $flashers = $octopuses->map(fn($i)=>$i->filter(fn($v, $k)=>$v>9))->filter(fn($i)=>$i->count() > 0);
