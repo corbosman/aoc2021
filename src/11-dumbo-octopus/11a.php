@@ -20,8 +20,8 @@ function flash($octopuses, $flashes) : array
     do {
         $flashers = $octopuses->map(fn($i)=>$i->filter(fn($v, $k)=>$v>9))->filter(fn($i)=>$i->count() > 0);
 
-        foreach($flashers as $x => $f) {
-            foreach($f as $y => $v) {
+        foreach($flashers as $x => $r) {
+            foreach($r as $y => $f) {
                 foreach(range(-1,1) as $d1) {
                     foreach(range(-1,1) as $d2) {
                         if ($d1 === 0 and $d2 === 0) continue;
