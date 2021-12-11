@@ -3,11 +3,9 @@
 require __DIR__ . '/../../vendor/autoload.php';
 
 const SIZE  = 10;
-const STEPS = 100;
 const MAX   = SIZE*SIZE;
 
 $octopuses = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i))->flatten()->map(fn($i)=>(int)$i);
-$sum = -1;
 
 for($i=1;; $i++) {
     $octopuses->transform(fn($i)=>$i+1);
