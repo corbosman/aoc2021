@@ -78,6 +78,6 @@ function explore(string $entrance, array $tunnels, array $caves) : int
 
 $tunnels = load();
 $caves   = study($tunnels);
-$paths   = explore('start', $tunnels, $caves);
+$count   = explore('start', $tunnels, $caves);
 
-output($paths);
+output($count);
