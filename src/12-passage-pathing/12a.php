@@ -26,7 +26,7 @@ function exits(string $entrance, array $paths) : array
     }, []);
 }
 
-function find($entrance, $paths, $path = []) : int
+function find($entrance, $paths) : int
 {
     if ($entrance === 'end') return 1;
 
@@ -39,7 +39,7 @@ function find($entrance, $paths, $path = []) : int
     }
 
     foreach($exits as $exit) {
-        $count+=find($exit, $paths, $path);
+        $count+=find($exit, $paths);
     }
 
     return $count;
