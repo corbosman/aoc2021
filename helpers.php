@@ -1,18 +1,37 @@
 <?php
 
-function map(callable $callback, array $array, array ...$arrays): array
-{
-    return array_map($callback, $array, ...$arrays);
-}
-
 function output($str) : void
 {
     print_r($str . "\n");
 }
 
+function map(callable $callback, array $array, array ...$arrays): array
+{
+    return array_map($callback, $array, ...$arrays);
+}
+
 function sum($array) : int|float
 {
     return array_sum($array);
+}
+
+function reduce(array $array, callable $callback, mixed $initial) : array
+{
+    return array_reduce($array, $callback, $initial);
+}
+
+function reverse(array $array) : array
+{
+    return array_reverse($array);
+}
+
+function merge(...$arrays) : array {
+    return array_merge(...$arrays);
+}
+
+function filter(array $array, callable $callback) : array
+{
+    return array_filter($array, $callback);
 }
 
 function str_diff($str1, $str2) : string
