@@ -46,5 +46,6 @@ function explore($entrance, $paths) : int
 }
 
 $caves = load();
-$sum = explore('start', $caves);
+$sum   = explore('start', $caves);
+
 output($sum);
