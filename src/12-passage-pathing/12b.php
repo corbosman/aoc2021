@@ -59,28 +59,25 @@ function can_enter(string $exit, array $caves) : bool
     return false;
 }
 
-function explore(string $entrance, array $tunnels, array $caves, array $path) : array
+function explore(string $entrance, array $tunnels, array $caves) : int
 {
-    // build our path
-    $path[] = $entrance;
-
     // end of the cave, we have a full path!
-    if ($entrance === 'end') return [$path];
+    if ($entrance === 'end') return 1;
 
     // register a new visit to this cave
     $caves[$entrance] += 1;
 
     // try to continue on into the caves
-    return reduce(exits($entrance, $tunnels), function($paths, $exit)  use ($tunnels, $caves, $path) : array {
+    return reduce(exits($entrance, $tunnels), function($count, $exit)  use ($tunnels, $caves) : int {
         if (can_enter($exit, $caves)) {
-            $paths = merge($paths,explore($exit, $tunnels, $caves, $path));
+            $count += explore($exit, $tunnels, $caves);
         }
-        return $paths;
-    }, []);
+        return $count;
+    }, 0);
 }
 
 $tunnels = load();
 $caves   = study($tunnels);
-$paths   = explore('start', $tunnels, $caves, []);
+$count   = explore('start', $tunnels, $caves);
 
-output(count($paths));
+output($count);
