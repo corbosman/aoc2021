@@ -43,7 +43,7 @@ function visited(string $cave, array $caves) : bool
 
 function double_visited(array $caves) : bool
 {
-    foreach(small_caves($caves) as $cave => $visits) {
+    foreach($caves as $cave => $visits) {
         if ($visits === 2) return true;
     }
     return false;
