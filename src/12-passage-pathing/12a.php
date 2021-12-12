@@ -26,7 +26,7 @@ function exits(string $entrance, array $paths) : array
     }, []);
 }
 
-function explore($entrance, $paths) : int
+function explore(string $entrance, array $paths) : int
 {
     if ($entrance === 'end') return 1;
 

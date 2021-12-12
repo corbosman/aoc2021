@@ -15,7 +15,7 @@ function sum($array) : int|float
     return array_sum($array);
 }
 
-function reduce(array $array, callable $callback, mixed $initial) : array
+function reduce(array $array, callable $callback, mixed $initial) : mixed
 {
     return array_reduce($array, $callback, $initial);
 }
@@ -29,9 +29,9 @@ function merge(...$arrays) : array {
     return array_merge(...$arrays);
 }
 
-function filter(array $array, callable $callback) : array
+function filter(array $array, callable $callback, $mode = 0) : array
 {
-    return array_filter($array, $callback);
+    return array_filter($array, $callback, $mode);
 }
 
 function str_diff($str1, $str2) : string
