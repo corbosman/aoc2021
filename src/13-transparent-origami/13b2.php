@@ -41,7 +41,9 @@ function fold_left(array $coordinate, int $fold) : array
 function fold(array $coordinates, array $folds) : array
 {
     return map(
-        fn($coordinate) => reduce($folds, fn($coordinate, $fold) => match($fold[0]) { 'x' => fold_left($coordinate, $fold[1]), 'y' => fold_up($coordinate, $fold[1])}, $coordinate),
+        fn($coordinate) => reduce(
+            $folds,
+            fn($coordinate, $fold) => match($fold[0]) { 'x' => fold_left($coordinate, $fold[1]), 'y' => fold_up($coordinate, $fold[1])}, $coordinate),
         $coordinates
     );
 }
