@@ -37,7 +37,7 @@ function fill(array $coordinates) : array
 function fold_up(array $paper, int $fold) : array
 {
     $top_half = filter($paper, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY);
-    $bottom_half = filter($paper, fn($v, $k)=>$k>$fold, ARRAY_FILTER_USE_BOTH);
+    $bottom_half = filter($paper, fn($k)=>$k>$fold, ARRAY_FILTER_USE_KEY);
 
     foreach($bottom_half as $k => $v) {
         $row = $fold - ($k-$fold);
