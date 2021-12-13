@@ -65,10 +65,7 @@ function fold(array $paper, array $folds) : array
 {
     foreach($folds as $fold) {
         list($axis, $num) = [$fold[0], $fold[1]];
-        $paper = match($axis) {
-            'x' => fold_left($paper, $num),
-            'y' => fold_up($paper, $num)
-        };
+        $paper = match($axis) { 'x' => fold_left($paper, $num), 'y' => fold_up($paper, $num)};
     }
     return $paper;
 }
