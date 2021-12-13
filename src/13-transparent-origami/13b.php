@@ -22,7 +22,6 @@ function print_paper(array $paper) : void
         }
         print("\n");
     }
-    print("\n");
 }
 
 function fill(array $coordinates) : array
