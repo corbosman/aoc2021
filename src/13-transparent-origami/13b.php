@@ -14,7 +14,7 @@ function load() : array
 function print_paper(array $paper) : void
 {
     $max_rows = max(array_keys($paper));
-    $max_columns = collect($paper)->values()->reduce(fn($c, $v) => max($c, max(array_keys($v))),0);
+    $max_columns = collect($paper)->reduce(fn($c, $v) => max($c, max(array_keys($v))),0);
 
     for($i=0;$i<=$max_rows;$i++) {
         for($j=0; $j<=$max_columns; $j++) {

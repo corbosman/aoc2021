@@ -67,16 +67,3 @@ $folded_paper = fold($paper, [$first_fold]);
 $dots = sum(map('count',$folded_paper));
 output($dots);
 
-function print_paper(array $paper) {
-    $max_rows = max(array_keys($paper));
-    $max_columns = collect($paper)->values()->map(fn($i) => array_flip($i))->flatten()->max();
-
-    for($i=0;$i<=$max_rows;$i++) {
-        echo "$i ";
-        for($j=0; $j<=$max_columns; $j++) {
-            echo isset($paper[$i][$j]) ? '#' : '.';
-        }
-        echo "\n";
-    }
-    echo "\n";
-}
