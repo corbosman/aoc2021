@@ -31,6 +31,11 @@ function is_large_cave(string $cave) : bool
     return ctype_upper($cave);
 }
 
+function is_small_cave(string $cave): bool
+{
+    return ctype_lower($cave) && $cave !== 'start';
+}
+
 function visits(string $cave, array $caves) : int
 {
     return $caves[$cave];
@@ -49,17 +54,17 @@ function double_visited(array $caves) : bool
     return false;
 }
 
-function can_enter(string $exit, array $caves) : bool
+function can_enter(string $exit, array $caves, bool $twice) : bool
 {
     if ($exit === 'start')  return false;                  // cant return back to start
     if (is_large_cave($exit)) return true;                 // can enter a large cave
     if (!visited($exit, $caves)) return true;              // can enter a small cave we haven't visited
-    if (!double_visited(small_caves($caves))) return true; // can enter a small cave if we haven't visited one twice before
+    if (!$twice) return true;                              // can enter a small cave if we haven't visited one twice before
 
     return false;
 }
 
-function explore(string $entrance, array $tunnels, array $caves) : int
+function explore(string $entrance, array $tunnels, array $caves, bool $twice = false) : int
 {
     // end of the cave, we have a full path!
     if ($entrance === 'end') return 1;
@@ -67,10 +72,15 @@ function explore(string $entrance, array $tunnels, array $caves) : int
     // register a new visit to this cave
     $caves[$entrance] += 1;
 
+    // did we visit a small cave twice?
+    if (!$twice && $caves[$entrance] === 2 && is_small_cave($entrance)) {
+        $twice = true;
+    }
+
     // try to continue on into the caves
-    return reduce(exits($entrance, $tunnels), function($count, $exit)  use ($tunnels, $caves) : int {
-        if (can_enter($exit, $caves)) {
-            $count += explore($exit, $tunnels, $caves);
+    return reduce(exits($entrance, $tunnels), function($count, $exit)  use ($tunnels, $caves, $twice) : int {
+        if (can_enter($exit, $caves, $twice)) {
+            $count += explore($exit, $tunnels, $caves, $twice);
         }
         return $count;
     }, 0);
@@ -78,6 +88,6 @@ function explore(string $entrance, array $tunnels, array $caves) : int
 
 $tunnels = load();
 $caves   = study($tunnels);
-$count   = explore('start', $tunnels, $caves);
+$count   = explore('start', $tunnels, $caves, false);
 
 output($count);
