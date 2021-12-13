@@ -35,7 +35,7 @@ function fill(array $coordinates) : array
 
 function fold_up(array $paper, int $fold) : array
 {
-    $top_half = filter($paper, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY);
+    $top_half    = filter($paper, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY);
     $bottom_half = filter($paper, fn($k)=>$k>$fold, ARRAY_FILTER_USE_KEY);
 
     foreach($bottom_half as $k => $v) {
@@ -47,7 +47,7 @@ function fold_up(array $paper, int $fold) : array
 
 function fold_left(array $paper, int $fold) : array
 {
-    $left_half = map(fn($row)=>filter($row, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY), $paper);
+    $left_half  = map(fn($row)=>filter($row, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY), $paper);
     $right_half = map(fn($row)=>filter($row, fn($k)=>$k>$fold, ARRAY_FILTER_USE_KEY), $paper);
 
     foreach($right_half as $x => $c) {
