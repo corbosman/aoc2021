@@ -11,6 +11,20 @@ function load() : array
     }, []);
 }
 
+function print_paper(array $paper) : void
+{
+    $max_rows = max(array_keys($paper));
+    $max_columns = collect($paper)->values()->reduce(fn($c, $v) => max($c, max(array_keys($v))),0);
+
+    for($i=0;$i<=$max_rows;$i++) {
+        for($j=0; $j<=$max_columns; $j++) {
+            print(isset($paper[$i][$j]) ? '#' : '.');
+        }
+        print("\n");
+    }
+    print("\n");
+}
+
 function fill(array $coordinates) : array
 {
     return reduce($coordinates, function($c, $v) {
@@ -66,22 +80,6 @@ function fold(array $paper, array $folds) : array
 
 [$coordinates, $folds] = load();
 $paper = fill($coordinates);
+$folded_paper = fold($paper, $folds);
+print_paper($folded_paper);
 
-$first_fold = $folds[0];
-$folded_paper = fold($paper, [$first_fold]);
-$dots = sum(map('count',$folded_paper));
-output($dots);
-
-function print_paper(array $paper) {
-    $max_rows = max(array_keys($paper));
-    $max_columns = collect($paper)->values()->map(fn($i) => array_flip($i))->flatten()->max();
-
-    for($i=0;$i<=$max_rows;$i++) {
-        echo "$i ";
-        for($j=0; $j<=$max_columns; $j++) {
-            echo isset($paper[$i][$j]) ? '#' : '.';
-        }
-        echo "\n";
-    }
-    echo "\n";
-}
