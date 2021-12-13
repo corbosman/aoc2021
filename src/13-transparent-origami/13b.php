@@ -48,13 +48,8 @@ function fold_up(array $paper, int $fold) : array
 
 function fold_left(array $paper, int $fold) : array
 {
-    $left_half = map(function($row) use ($fold) {
-       return filter($row, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY);
-    }, $paper);
-
-    $right_half = map(function($row) use ($fold) {
-       return filter($row, fn($k)=>$k>$fold, ARRAY_FILTER_USE_KEY);
-    }, $paper);
+    $left_half = map(fn($row)=>filter($row, fn($k)=>$k<$fold, ARRAY_FILTER_USE_KEY), $paper);
+    $right_half = map(fn($row)=>filter($row, fn($k)=>$k>$fold, ARRAY_FILTER_USE_KEY), $paper);
 
     foreach($right_half as $x => $c) {
         foreach($c as $y => $v) {
