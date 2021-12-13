@@ -21,11 +21,6 @@ function exits(string $entrance, array $tunnels) : array
     }, []);
 }
 
-function small_caves(array $caves) : array
-{
-    return filter($caves, fn($cave) => !in_array($cave, ['start', 'end']) && ctype_lower($cave), ARRAY_FILTER_USE_KEY);
-}
-
 function is_large_cave(string $cave) : bool
 {
     return ctype_upper($cave);
@@ -44,14 +39,6 @@ function visits(string $cave, array $caves) : int
 function visited(string $cave, array $caves) : bool
 {
     return visits($cave, $caves) !== 0;
-}
-
-function double_visited(array $caves) : bool
-{
-    foreach($caves as $cave => $visits) {
-        if ($visits === 2) return true;
-    }
-    return false;
 }
 
 function can_enter(string $exit, array $caves, bool $twice) : bool
