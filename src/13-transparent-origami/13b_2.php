@@ -6,7 +6,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function load() : array
 {
-    return collect(file('input_e.txt', FILE_IGNORE_NEW_LINES))->reduceSpread(function($coordinates, $folds, $v) {
+    return collect(file('input.txt', FILE_IGNORE_NEW_LINES))->reduceSpread(function($coordinates, $folds, $v) {
         if (preg_match('/^fold along (.*)=(\d+)$/', $v, $m)) $folds = $folds->concat([[$m[1], (int)$m[2]]]);
         elseif (preg_match('/^(\d+),(\d+)$/', $v, $m))       $coordinates = $coordinates->concat([[(int)$m[1], (int)$m[2]]]);
         return [$coordinates, $folds];
