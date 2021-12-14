@@ -34,7 +34,7 @@ function steps($rules, $pairs, $atoms, $steps)
             $atom = $rules[$pair][0][1];
             $atoms[$atom] = (isset($atoms[$atom])) ? $atoms[$atom] + $count : $count;
 
-            // create new pairs based on original pair
+            // create new pairs based on original pair, NN => NC CN  , NN NN => NC CN NC CN
             foreach($rules[$pair] as $rule) {
                 $new_pairs[$rule] = isset($new_pairs[$rule]) ? $new_pairs[$rule] + $count : $count;
             }
