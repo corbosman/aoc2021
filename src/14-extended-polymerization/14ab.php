@@ -22,7 +22,7 @@ function atomize($polymer) : array
 
 function pairs($polymer)
 {
-    return $polymer->sliding(2)->map->implode(null)->groupBy(fn($i)=>$i)->map->count()->toArray();
+    return $polymer->sliding(2)->map->implode(null)->countBy();
 }
 
 function steps($rules, $pairs, $atoms, $steps)
