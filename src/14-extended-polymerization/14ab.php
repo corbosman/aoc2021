@@ -30,6 +30,8 @@ function steps($rules, $pairs, $atoms, $steps)
     for ($i=1;$i<=$steps;$i++) {
         $new_pairs = [];
         foreach($pairs as $pair => $count) {
+            if ($count === 0) continue;
+
             // we have an extra atom, add it to our list of atoms
             $atom = $rules[$pair][0][1];
             $atoms[$atom] = (isset($atoms[$atom])) ? $atoms[$atom] + $count : $count;
@@ -39,6 +41,7 @@ function steps($rules, $pairs, $atoms, $steps)
                 $new_pairs[$rule] = isset($new_pairs[$rule]) ? $new_pairs[$rule] + $count : $count;
             }
         }
+        dump($pairs);
         $pairs = $new_pairs;
     }
     return [$atoms, $pairs];
