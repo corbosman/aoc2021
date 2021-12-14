@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-
+use Tightenco\Collect\Support\Collection;
 require __DIR__ . '/../../vendor/autoload.php';
 
 function load() : array
@@ -12,7 +12,7 @@ function load() : array
     ];
 }
 
-function atomize($polymer) : array
+function atomize(iterable $polymer) : array
 {
     return $polymer->reduce(function($atoms, $atom) {
         $atoms[$atom] = !isset($atoms[$atom]) ? 1 : $atoms[$atom] + 1;
@@ -20,12 +20,12 @@ function atomize($polymer) : array
     },[]);
 }
 
-function pairs($polymer)
+function pairs(iterable $polymer) : array
 {
-    return $polymer->sliding(2)->map->implode(null)->countBy();
+    return $polymer->sliding(2)->map->implode(null)->countBy()->toArray();
 }
 
-function steps($rules, $pairs, $atoms, $steps)
+function steps(iterable $rules, iterable $pairs, iterable $atoms, int $steps) : array
 {
     for ($i=1;$i<=$steps;$i++) {
         $new_pairs = [];
