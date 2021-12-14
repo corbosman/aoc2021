@@ -50,7 +50,7 @@ $pairs = pairs($polymer);
 $atoms = atomize($polymer);
 
 [$atoms, $pairs] = steps($rules, $pairs, $atoms, 10);
-output(max($atoms)-min($atoms));
+output("10=" . max($atoms)-min($atoms));
 
 [$atoms, $pairs] = steps($rules, $pairs, $atoms, 30);
-output(max($atoms)-min($atoms));
+output("40=" . max($atoms)-min($atoms));
