@@ -13,10 +13,7 @@ function load() : array
 
 function atomize(iterable $polymer) : array
 {
-    return $polymer->reduce(function($atoms, $atom) {
-        $atoms[$atom] = !isset($atoms[$atom]) ? 1 : $atoms[$atom] + 1;
-        return $atoms;
-    },[]);
+    return $polymer->countBy()->toArray();
 }
 
 function pairs(iterable $polymer) : array
