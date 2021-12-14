@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-use Tightenco\Collect\Support\Collection;
 require __DIR__ . '/../../vendor/autoload.php';
 
 function load() : array
