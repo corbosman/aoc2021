@@ -31,27 +31,26 @@ function steps($rules, $pairs, $atoms, $steps)
     for ($i=1;$i<=$steps;$i++) {
         $new_pairs = [];
         foreach($pairs as $pair => $count) {
-            // we have an extra atom
+            // we have an extra atom, add it to our list of atoms
             $atom = $rules[$pair][0][1];
             $atoms[$atom] = (isset($atoms[$atom])) ? $atoms[$atom] + $count : $count;
 
             // create new pairs based on original pair
             foreach($rules[$pair] as $rule) {
-                if(isset($new_pairs[$rule])) {
-                    $new_pairs[$rule] += $count;
-                } else {
-                   $new_pairs[$rule] = $count;
-                }
+                $new_pairs[$rule] = isset($new_pairs[$rule]) ? $new_pairs[$rule] + $count : $count;
             }
         }
         $pairs = $new_pairs;
     }
-    return $atoms;
+    return [$atoms, $pairs];
 }
 
 [$polymer, $rules] = load();
 $pairs = pairs($polymer);
 $atoms = atomize($polymer);
-$atoms = steps($rules, $pairs, $atoms, 40);
 
+[$atoms, $pairs] = steps($rules, $pairs, $atoms, 10);
+output(max($atoms)-min($atoms));
+
+[$atoms, $pairs] = steps($rules, $pairs, $atoms, 30);
 output(max($atoms)-min($atoms));
