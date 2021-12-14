@@ -24,18 +24,19 @@ function pairs(iterable $polymer) : array
 function steps(iterable $rules, iterable $pairs, iterable $atoms, int $steps) : array
 {
     for ($i=1;$i<=$steps;$i++) {
-        $new_pairs = [];
         foreach($pairs as $pair => $count) {
             // we have an extra atom, add it to our list of atoms
             $atom = $rules[$pair][0][1];
             $atoms[$atom] = (isset($atoms[$atom])) ? $atoms[$atom] + $count : $count;
 
+            // remove count from this pair
+            $pairs[$pair] -= $count;
+
             // create new pairs based on original pair, NN => NC CN  , NN NN => NC CN NC CN
             foreach($rules[$pair] as $rule) {
-                $new_pairs[$rule] = isset($new_pairs[$rule]) ? $new_pairs[$rule] + $count : $count;
+                $pairs[$rule] = isset($pairs[$rule]) ? $pairs[$rule] + $count : $count;
             }
         }
-        $pairs = $new_pairs;
     }
     return [$atoms, $pairs];
 }
