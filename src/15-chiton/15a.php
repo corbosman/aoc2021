@@ -2,8 +2,6 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-const INFINITE = 9999999999999;
-
 function load() : array
 {
     $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
