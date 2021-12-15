@@ -4,7 +4,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function load() : array
 {
-    $input = collect(file('input_e.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
+    $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
     return $input->toArray();
 }
 
