@@ -6,56 +6,37 @@ const INFINITE = 9999999999999;
 
 function load() : array
 {
-    $input = collect(file('input_e.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
-    $size = $input->count();
-    $input = $input->flatten();
-    $max = $input->count();
-    return [$input->toArray(), $size, $max];
+    $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
+    return $input->toArray();
 }
 
-function calculate_risk($cave, $pos, $size, $max, &$cache) : int
+function calculate_risk($cave) : array
 {
-    $risk = $cave[$pos];
+    $height = count($cave);
+    $width = count($cave[0]);
+    $risk_map = [];
 
-    // if we reached bottom right, return it's risk
-    if ($pos == ($max-1)) return $risk;
+    for($x=$height-1; $x>=0; $x--) {
+        for($y=$width-1; $y>=0; $y--) {
+            $current_risk = $cave[$x][$y];
 
-    // calculate down risk
-    $down = $pos+$size;
-    if ($down < $max) {
-        $down_risk = $cache[$down] ?? calculate_risk($cave, $down, $size, $max, $cache);
-    } else {
-        $down_risk = INFINITE;
+            $bottom_risk  = $x+1 >= $height ? null : $risk_map[$x+1][$y];
+            $right_risk   = $y+1 >= $width ? null : $risk_map[$x][$y+1];
+
+            if (!$bottom_risk && !$right_risk) {
+                $lowest_risk = 0;
+            } else {
+                $lowest_risk = !$bottom_risk ? $right_risk : (!$right_risk ? $bottom_risk : min($bottom_risk, $right_risk));
+            }
+            $risk_map[$x][$y] = $current_risk + $lowest_risk;
+        }
     }
-
-    // calculate right risk
-    $right = $pos+1;
-    if ($right > $pos % $size) {
-        $right_risk = $cache[$right] ?? calculate_risk($cave, $right, $size, $max, $cache);
-    } else {
-        $right_risk = INFINITE;
-    }
-
-    // which is the lowest?
-    $lowest_risk = min($down_risk, $right_risk);
-    $cache[$pos] = $risk + $lowest_risk;
-
-    // print_cave($cave, $cache, $size, $max);
-
-    return $risk + $lowest_risk;
+    return $risk_map;
 }
 
-[$cave, $size, $max] = load();
-$cache = [];
-$lowest_risk = calculate_risk($cave, 0, $size,$max, $cache);
+$cave = load();
+$risk_map = calculate_risk($cave);
+$risk_for_top_left = $risk_map[0][0] - $cave[0][0];
 
-output($lowest_risk - $cave[0]);
+output($risk_for_top_left);
 
-function print_cave($cave, $cache, $size, $max)
-{
-    for($pos=0; $pos<$max; $pos++) {
-        $low = $cache[$pos] ?? '.';
-        echo sprintf("%3s", $low);
-        if ($pos % $size === 9) echo "\n";
-    }
-}
