@@ -2,9 +2,11 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
+const INFINITE = 999999999999999;
+
 function load() : array
 {
-    $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
+    $input = collect(file('input_e.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
     return $input->toArray();
 }
 
@@ -36,28 +38,16 @@ function lowest(?int $risk1, ?int $risk2) : int
     return min($risk1, $risk2);
 }
 
-function lowest_risk_level(array $cave) : int
+function lowest_risk_level(array $cave, $x, $y, $size, &$risk_map, &$lowest) : int
 {
-    $max      = count($cave)-1;
-    $risk_map = [];
 
-    for($x=0; $x<=$max; $x++) {
-        for($y=0; $y<=$max; $y++) {
-            $current_risk = $cave[$x][$y];
-
-            $top_risk  = $x-1<0 ? null : $risk_map[$x-1][$y];
-            $left_risk = $y-1<0 ? null : $risk_map[$x][$y-1];
-
-            $risk_map[$x][$y] = $current_risk + lowest($left_risk, $top_risk);
-        }
-    }
-    print_risk_map($cave, $risk_map);
-    return $risk_map[$max][$max] - $cave[0][0];
 }
 
 $cave = load();
-//$risk = lowest_risk_level($cave);
-//output("15a = {$risk}");
+$size = count($cave);
+
+$risk = lowest_risk_level($cave, $cache, INFINITE);
+output("15a = {$risk}");
 
 $cave = expand($cave);
 $risk2 = lowest_risk_level($cave);
