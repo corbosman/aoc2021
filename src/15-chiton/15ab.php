@@ -10,6 +10,25 @@ function load() : array
     return $input->toArray();
 }
 
+function expand(array $cave) : array
+{
+    $size = count($cave);
+    $expanded = [];
+
+    for($i=0;$i<5;$i++) {
+        for($j=0;$j<5;$j++) {
+            foreach($cave as $x => $row) {
+                foreach ($row as $y => $risk) {
+                    $risk = $risk+$i+$j;
+                    while($risk > 9) $risk = $risk - 9;
+                    $expanded[$x+($i*$size)][$y+($j*$size)] = $risk;
+                }
+            }
+        }
+    }
+    return $expanded;
+}
+
 
 class Heap extends SplPriorityQueue
 {
@@ -81,26 +100,6 @@ class Dijkstra
 
         return $distances[$height-1][$width-1] - $distances[0][0];
     }
-}
-
-function expand(array $cave) : array
-{
-    $size = count($cave);
-    $expanded = [];
-
-    for($i=0;$i<5;$i++) {
-        for($j=0;$j<5;$j++) {
-            $add = $i+$j;
-            foreach($cave as $x => $row) {
-                foreach ($row as $y => $v) {
-                    $risk = ($v+$add);
-                    while($risk > 9) $risk = $risk - 9;
-                    $expanded[$x+($i*$size)][$y+($j*$size)] = $risk;
-                }
-            }
-        }
-    }
-    return $expanded;
 }
 
 $cave = load();
