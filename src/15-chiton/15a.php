@@ -6,7 +6,7 @@ const INFINITE = 999999999999999;
 
 function load() : array
 {
-    $input = collect(file('input_small.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
+    $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
     return $input->toArray();
 }
 
@@ -32,12 +32,6 @@ function expand(array $cave) : array
 
 function create_unvisited(array $cave) : array
 {
-    $unvisited = [];
-    foreach($cave as $x => $v1) {
-        foreach($v1 as $y => $v2) {
-            $unvisited[$x][$y] = INFINITE;
-        }
-    }
     // initialise the first unvisited distance
     $unvisited[0][0] = $cave[0][0];
     return $unvisited;
@@ -81,24 +75,31 @@ function neighbors(array $cave, int $x, int $y, int $width, int $height, $visite
 function dijkstra(array $cave, $x, $y) : int
 {
     $unvisited = create_unvisited($cave);
-    dump("unvisited=" . count($unvisited));
+
+    //dump("unvisited=" . count($unvisited));
     $loop = 1;
     $visited   = [];
     $distances = [0=>[0=>1]];
     $width     = count($cave[0]);
     $height    = count($cave);
-    $lowest_risk = INFINITE;
+    $tx        = $height-1;
+    $ty        = $width-1;
 
     while (count($unvisited) > 0) {
 
-        dump("{$x}{$y}");
+        if ($x == $tx && $y == $ty) {
+            dump("reached end node");
+            return $distances[$tx][$ty] - $distances[0][0];
+        }
+
         // find all the neighbors for the current position
         $neighbors = neighbors($cave, $x, $y, $width, $height, $visited);
 
         // foreach neighbor, calculate the new distance and check with previous known minimal distance
         foreach ($neighbors as list($nx, $ny)) {
+            dump("neighbor {$nx},{$ny}");
             if (isset($visited[$nx][$ny])) {
-                dump("already visited {$nx}{$ny}");
+                dump("already visited {$nx},{$ny}");
                 continue;
             }
 
@@ -116,11 +117,7 @@ function dijkstra(array $cave, $x, $y) : int
         if (count($unvisited) > 0) {
             list($x, $y) = next_node($unvisited);
         }
-        print_risk_map($cave, $distances);
-        $loop += 1;
-        if ($loop % 1) {
-            print_risk_map($cave, $distances);
-        }
+        // print_risk_map($cave, $distances);
     }
 
     // print_risk_map($cave, $distances);
