@@ -77,7 +77,7 @@ class Dijkstra
 
             // woo, we found the shortest path
             if ($x == $end_x && $y == $end_y) {
-                return $distances[$end_x][$end_y];
+                return $distances[$x][$y];
             }
 
             // find all the neighbors for the current position that haven't been visited yet
@@ -96,8 +96,6 @@ class Dijkstra
             // mark current node as visited
             $visited[$x][$y] = true;
         }
-
-        return $distances[$x][$y];
     }
 }
 
