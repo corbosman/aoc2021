@@ -66,7 +66,7 @@ class Dijkstra
         $queue->insert($start, 0);
 
         $visited   = [];
-        $distances = [0=>[0=>1]];
+        $distances = [0=>[0=>0]];
 
         $width     = count($this->cave[0]);
         $height    = count($this->cave);
@@ -78,7 +78,7 @@ class Dijkstra
 
             // woo, we found the shortest path
             if ($x == $end_x && $y == $end_y) {
-                return $distances[$end_x][$end_y] - $distances[0][0];
+                return $distances[$end_x][$end_y];
             }
 
             // find all the neighbors for the current position that haven't been visited yet
