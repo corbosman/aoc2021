@@ -96,6 +96,8 @@ class Dijkstra
             // mark current node as visited
             $visited[$x][$y] = true;
         }
+        // sad panda, nothing found
+        return -1;
     }
 }
 
