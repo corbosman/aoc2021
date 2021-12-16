@@ -46,7 +46,7 @@ class Dijkstra
         $this->cave = $cave;
     }
 
-    protected function neighbors(int $x, int $y, int $width, int $height, $visited) : array
+    protected function neighbors(int $x, int $y, int $width, int $height) : array
     {
         $neighbors = [];
 
