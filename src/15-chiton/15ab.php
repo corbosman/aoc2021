@@ -29,7 +29,6 @@ function expand(array $cave) : array
     return $expanded;
 }
 
-
 class Heap extends SplPriorityQueue
 {
     function compare($priority1,$priority2) : int
@@ -98,7 +97,7 @@ class Dijkstra
             $visited[$x][$y] = true;
         }
 
-        return $distances[$height-1][$width-1] - $distances[0][0];
+        return $distances[$x][$y];
     }
 }
 
