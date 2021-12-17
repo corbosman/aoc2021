@@ -9,7 +9,6 @@ class Packet
     protected int $literal;
     protected int $length = 0;
     protected array $packets = [];
-    protected ?string $id = null;
 
     public function __construct(public int $version, public int $type){}
 
@@ -59,12 +58,6 @@ class Packet
     {
         return $this->packets;
     }
-
-    public function set_id(string $id) : void
-    {
-        $this->id = $id;
-    }
-
 }
 
 class PacketDecoder
@@ -78,7 +71,7 @@ class PacketDecoder
         $version = bindec($this->read_bits(3));
         $type    = bindec($this->read_bits(3));
         $packet  = new Packet($version, $type);
-        $packet->set_id(uniqid());
+
         switch ($packet->type) {
             case Packet::LITERAL:
                 $literal = $this->decode_literal();
