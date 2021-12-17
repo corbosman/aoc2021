@@ -2,8 +2,6 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-const INFINITE = 999999999999999;
-
 class Packet
 {
     const LITERAL = 4;
