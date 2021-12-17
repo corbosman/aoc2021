@@ -43,6 +43,7 @@ class Packet
         return $sum;
     }
 
+    // for 16b
     public function evaluate()
     {
         $values = map(fn($packet)=>$packet->evaluate(), $this->packets());
