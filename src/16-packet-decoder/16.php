@@ -142,8 +142,7 @@ class PacketDecoder
         $number_of_packets = bindec($this->read_bits(11));
 
         for($i=0; $i<$number_of_packets; $i++) {
-            $p = (new PacketDecoder($this->stream))->decode();
-            $packets[] = $p;
+            $packets[] = (new PacketDecoder($this->stream))->decode();
         }
 
         return $packets;
