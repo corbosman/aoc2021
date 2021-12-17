@@ -4,7 +4,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function read_transmission() : Generator
 {
-    foreach(str_split(file('input.txt', FILE_IGNORE_NEW_LINES)[0]) as $hex) {
+    foreach(str_split(file('inputs/input.txt', FILE_IGNORE_NEW_LINES)[0]) as $hex) {
         foreach(str_split(substr('000' . decbin(hexdec($hex)), -4)) as $bit) {
             yield $bit;
         }
