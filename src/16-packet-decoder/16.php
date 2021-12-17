@@ -13,9 +13,16 @@ function read_transmission() : Generator
 
 class Packet
 {
-    const LITERAL = 4;
+    const SUM     = 0;
+    const PRODUCT = 1;
+    const MIN     = 2;
+    const MAX     = 3;
+    const SCALAR  = 4;
+    const GREATER = 5;
+    const LOWER   = 6;
+    const EQUAL   = 7;
 
-    protected int $literal;
+    protected int $value;
     protected int $length = 0;
     protected array $packets = [];
 
@@ -26,13 +33,30 @@ class Packet
         return $this->version;
     }
 
-    public function sum()
+    // for 16a
+    public function checksum()
     {
         $sum = $this->version();
         foreach($this->packets() as $packet) {
-            $sum += $packet->sum();
+            $sum += $packet->checksum();
         }
         return $sum;
+    }
+
+    public function evaluate()
+    {
+        $values = map(fn($packet)=>$packet->evaluate(), $this->packets());
+
+        return match($this->type()) {
+            self::SUM     => array_sum($values),
+            self::PRODUCT => array_product($values),
+            self::MIN     => min($values),
+            self::MAX     => max($values),
+            self::SCALAR  => $this->get_value(),
+            self::GREATER => (int) $values[0] > $values[1],
+            self::LOWER   => (int) $values[0] < $values[1],
+            self::EQUAL   => (int) $values[0] === $values[1],
+        };
     }
 
     public function type() : int
@@ -40,9 +64,14 @@ class Packet
         return $this->type;
     }
 
-    public function set_literal(int $literal) : void
+    public function set_value(int $value) : void
     {
-        $this->literal = $literal;
+        $this->value = $value;
+    }
+
+    public function get_value() : int
+    {
+        return $this->value;
     }
 
     public function set_length(int $length) : void
@@ -50,7 +79,7 @@ class Packet
         $this->length = $length;
     }
 
-    public function length() : int
+    public function get_length() : int
     {
         return $this->length;
     }
@@ -82,15 +111,15 @@ class PacketDecoder
         $packet  = new Packet($version, $type);
 
         switch ($packet->type) {
-            case Packet::LITERAL:
+            case Packet::SCALAR:
                 $literal = $this->decode_literal();
-                $packet->set_literal($literal);
+                $packet->set_value($literal);
                 break;
             default:
                 $sub_packets = $this->decode_operator();
 
                 foreach($sub_packets as $sub_packet) {
-                    $this->total_bits += $sub_packet->length();
+                    $this->total_bits += $sub_packet->get_length();
                 }
 
                 $packet->add_packets($sub_packets);
@@ -129,7 +158,7 @@ class PacketDecoder
 
         do {
             $sub_packet = (new PacketDecoder($this->stream))->decode();
-            $bits += $sub_packet->length();
+            $bits += $sub_packet->get_length();
             $packets[] = $sub_packet;
         } while ($bits < $sub_packet_length);
 
@@ -162,6 +191,6 @@ class PacketDecoder
 
 $msg    = read_transmission();
 $packet = (new PacketDecoder($msg))->decode();
-$sum = $packet->sum();
 
-output($sum);
+output("16a = {$packet->checksum()}");
+output("16b = {$packet->evaluate()}");
