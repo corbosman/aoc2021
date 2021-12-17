@@ -162,7 +162,6 @@ function read_transmission() : Generator
 
 $msg    = read_transmission();
 $packet = (new PacketDecoder($msg))->decode();
-dump($packet);
 $sum = $packet->sum();
 
 output($sum);
