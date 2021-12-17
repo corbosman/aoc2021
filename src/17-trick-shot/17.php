@@ -17,5 +17,6 @@ function target_area()
 // 4. Dit is -10 + (sum range(1-10))
 // 5. Dit is de formule n*(n-1)/2
 
+$max_height = -$y1 + (-$y1*(-$y1-1))/2;
 
-output(-$y1 + -$y1*(-$y1-1)/2);
+output("16a = {$max_height}");
