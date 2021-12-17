@@ -12,4 +12,4 @@ function target_area()
 
 $max_height = abs($y1) * (abs($y1)-1)/2;
 
-output("16a = {$max_height}");
+output("17a = {$max_height}");
