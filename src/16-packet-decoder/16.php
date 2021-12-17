@@ -11,12 +11,22 @@ class Packet
     protected int $literal;
     protected int $length = 0;
     protected array $packets = [];
+    protected ?string $id = null;
 
     public function __construct(public int $version, public int $type){}
 
     public function version() : int
     {
         return $this->version;
+    }
+
+    public function sum()
+    {
+        $sum = $this->version();
+        foreach($this->packets() as $packet) {
+            $sum += $packet->sum();
+        }
+        return $sum;
     }
 
     public function type() : int
@@ -52,6 +62,11 @@ class Packet
         return $this->packets;
     }
 
+    public function set_id(string $id) : void
+    {
+        $this->id = $id;
+    }
+
 }
 
 class PacketDecoder
@@ -65,7 +80,7 @@ class PacketDecoder
         $version = bindec($this->read_bits(3));
         $type    = bindec($this->read_bits(3));
         $packet  = new Packet($version, $type);
-
+        $packet->set_id(uniqid());
         switch ($packet->type) {
             case Packet::LITERAL:
                 $literal = $this->decode_literal();
@@ -147,7 +162,7 @@ class PacketDecoder
 
 function read_transmission() : Generator
 {
-   foreach(str_split(file('input_e3.txt', FILE_IGNORE_NEW_LINES)[0]) as $hex) {
+   foreach(str_split(file('input.txt', FILE_IGNORE_NEW_LINES)[0]) as $hex) {
        foreach(str_split(substr('000' . decbin(hexdec($hex)), -4)) as $bit) {
            yield $bit;
        }
@@ -156,3 +171,7 @@ function read_transmission() : Generator
 
 $msg    = read_transmission();
 $packet = (new PacketDecoder($msg))->decode();
+dump($packet);
+$sum = $packet->sum();
+
+output($sum);
