@@ -83,6 +83,7 @@ class PacketDecoder
                 foreach($sub_packets as $sub_packet) {
                     $this->total_bits += $sub_packet->length();
                 }
+
                 $packet->add_packets($sub_packets);
                 break;
         }
