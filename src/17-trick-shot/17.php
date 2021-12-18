@@ -43,7 +43,7 @@ function vy_candidates(int $y1, int $y2, int $max_height) : array
 }
 
 /*
- * simulate trajectories from within allowed vx and vx initial vectors
+ * simulate trajectories from within allowed vx and vy initial vectors
  */
 function simulate(int $x1, int $x2, int $y1, int $y2, int $max_height) : int
 {
