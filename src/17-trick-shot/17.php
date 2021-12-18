@@ -31,9 +31,9 @@ function vx_candidates(int $x1, int $x2) : array
  * 1. Find the max height for the landing site, similar to 17a.
  * 2. Now find all initial y values that stay below that height from 0,0
  */
-function vy_candidates(int $y1, int $y2) : array
+function vy_candidates(int $y1, int $y2, int $max_height) : array
 {
-    $max_height = abs($y1) * (abs($y1)-1)/2;
+    // $max_height = abs($y1) * (abs($y1)-1)/2;
 
     $y = 0;
     do {
@@ -47,10 +47,10 @@ function vy_candidates(int $y1, int $y2) : array
 /*
  * simulate trajectories from within allowed vx and vx initial vectors
  */
-function simulate($x1, $x2, $y1, $y2) {
+function simulate($x1, $x2, $y1, $y2, $max_height) {
 
     $vx_candidates = vx_candidates($x1, $x2);
-    $vy_candidates = vy_candidates($y1, $y2);
+    $vy_candidates = vy_candidates($y1, $y2, $max_height);
 
     $landed = [];
     foreach($vx_candidates as $vx_candidate) {
@@ -86,7 +86,7 @@ $time1 = microtime(true);
 $max_height = abs($y1) * (abs($y1)-1)/2;
 output("17a = {$max_height}");
 
-$vector_count = simulate($x1, $x2, $y1, $y2);
+$vector_count = simulate($x1, $x2, $y1, $y2, $max_height);
 output("17b = {$vector_count}");
 
 $time2 = microtime(true);
