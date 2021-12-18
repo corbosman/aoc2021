@@ -33,8 +33,6 @@ function vx_candidates(int $x1, int $x2) : array
  */
 function vy_candidates(int $y1, int $y2, int $max_height) : array
 {
-    // $max_height = abs($y1) * (abs($y1)-1)/2;
-
     $y = 0;
     do {
         $y++;
@@ -47,7 +45,8 @@ function vy_candidates(int $y1, int $y2, int $max_height) : array
 /*
  * simulate trajectories from within allowed vx and vx initial vectors
  */
-function simulate($x1, $x2, $y1, $y2, $max_height) {
+function simulate(int $x1, int $x2, int $y1, int $y2, int $max_height) : int
+{
 
     $vx_candidates = vx_candidates($x1, $x2);
     $vy_candidates = vy_candidates($y1, $y2, $max_height);
