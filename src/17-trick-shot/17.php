@@ -9,14 +9,14 @@ function target_area()
 }
 
 /*
- * find all possible X speeds for our square
+ * find all possible x speeds for our landing site
  *
- * 1. A speed that is too low will never make it to $x1
- * 2. So count from 1, until you hit a speed who's acceleration ends within our square
- * 3. All x speeds larger than this value until we hit $x2 are candidates
- * 4. If a speed is larger than $x2, it will always overshoot
+ * 1. A speed that is too low will never make it to the landing site
+ * 2. So count from 1, until you hit an acceleration that brings us within our landing site
+ * 3. All x speeds larger than this value until we hit the end of our landing site are candidates
+ * 4. If a speed is larger than the end of our landing site we will miss it
  */
-function vx_candidates($x1, $x2) : array
+function vx_candidates(int $x1, int $x2) : array
 {
     for($x=1; $x<$x1; $x++) {
         $max_x = $x*($x+1)/2;
@@ -26,10 +26,12 @@ function vx_candidates($x1, $x2) : array
 }
 
 /*
- * 1. Find the max height for the landing pad, similar to 17a.
+ * Find all possible y values for our landing site
+ *
+ * 1. Find the max height for the landing site, similar to 17a.
  * 2. Now find all initial y values that stay below that height from 0,0
  */
-function vy_candidates($y1, $y2)
+function vy_candidates(int $y1, int $y2) : array
 {
     $max_height = abs($y1) * (abs($y1)-1)/2;
 
