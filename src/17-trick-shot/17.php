@@ -67,8 +67,8 @@ function simulate(int $x1, int $x2, int $y1, int $y2, int $max_height) : int
                     $landed[] = [$x, $y];
                     break;
                 }
-                elseif ($x>$x2 || $y<$y1) break;                                // we shot behind or under
-                elseif ($vx === 0 && $x<$x1) break;                                    // we came up short
+                elseif ($x>$x2 || $y<$y1) break;                      // we shot behind or under
+                elseif ($vx === 0 && $x<$x1) break;                   // we came up short
 
                 $vx = $vx > 0 ? $vx-1 : 0;
                 $vy = $vy - 1;
