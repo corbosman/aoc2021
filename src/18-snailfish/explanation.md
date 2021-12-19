@@ -4,7 +4,7 @@ Instead of using a btree, I just keep a list of all the values and their depth.
 ```[[[1,2]]]```   is processed as a list ```[[1,3],[2,3]]``` (2 values at depth 3)
 
 Why is this handy? Now you never have to worry about a tree.
-You can simply look at the depth to see how often it was nested,
+You can look at the depth to see how often it was nested,
 and you can find the next and previous value simply by looking
 at the next and previous value in the array. All the [[[[[[[[]]]]]  just don't matter.
 
