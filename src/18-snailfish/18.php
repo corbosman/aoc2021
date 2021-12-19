@@ -5,7 +5,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function snailfish() : Collection
 {
-    return collect(file('inputs/input.txt', FILE_IGNORE_NEW_LINES))->map(fn($line) => collect(str_split($line)));
+    return collect(file('inputs/input_e12.txt', FILE_IGNORE_NEW_LINES))->map(fn($line) => collect(str_split($line)));
 }
 
 // parse a line as an array as values and their depth in the array
@@ -104,10 +104,9 @@ function process($input)
 
     // now parse the rest one by one and add the result
     foreach($input->splice(1) as $line) {
-        // read the next line
         $next_line = parse($line);
 
-        // merge the 2 lines and increase all depths by 1
+        // to combine the 2 lines, just add the array, and then increase the depth for all items with 1.
         $values = $values->concat($next_line)->map(fn($i) => [$i[0], $i[1]+1]);
 
         // now explode and/or split the resulting combined array
