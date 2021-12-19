@@ -22,7 +22,7 @@ Let's take this line from the puzzle:
 
 Left most pair [4,3] is a 4 at depth 5, and a 3 at depth 5, so that becomes [4,5],[3,5], etc
 
-The rules are now very simple. A number to the left is the previous number in the array. A number to the right is simply the next number in the array.
+The rules are now very simple. A number to the left is the previous number in the array. A number to the right is the next number in the array.
 
 To handle the magnitude, just go through the array, and recursively splice to values that belong together and drop them down 1 depth.
 
