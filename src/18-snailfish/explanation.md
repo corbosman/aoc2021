@@ -3,9 +3,18 @@ Instead of using a btree, I just keep a list of all the values and their depth.
 [[1,1][2,2]] is processed as a list [[1,2],[1,2],[2,2],[2,2]]  (4 values 1,1,2,2 at depth 2)
 [[[1,2]]]    is processed as a list [[1,3],[2,3]] (2 values at depth 3)
 
-Why is this handy? Now you never have to worry about a tree. You can simply look at the depth to see how often it was nested, and you can find the next and previous value simply by looking at the next and previous value in the array. All the [[[[[[[[]]]]]  just don't matter. Look at the rules.
+Why is this handy? Now you never have to worry about a tree.
+You can simply look at the depth to see how often it was nested,
+and you can find the next and previous value simply by looking
+at the next and previous value in the array. All the [[[[[[[[]]]]]  just don't matter.
 
-"To explode a pair, the pair's left value is added to the first regular number to the left of the exploding pair (if any), and the pair's right value is added to the first regular number to the right of the exploding pair (if any). Exploding pairs will always consist of two regular numbers. Then, the entire exploding pair is replaced with the regular number 0."
+```
+"To explode a pair, the pair's left value is added to the first regular number to the
+left of the exploding pair (if any), and the pair's right value is added to the first
+regular number to the right of the exploding pair (if any). Exploding pairs will always
+consist of two regular numbers. Then, the entire exploding pair is replaced with the
+regular number 0."
+```
 
 Let's take this line from the puzzle:
 
