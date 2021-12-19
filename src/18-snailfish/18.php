@@ -5,7 +5,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function snailfish() : Collection
 {
-    return collect(file('inputs/input_e12.txt', FILE_IGNORE_NEW_LINES))->map(fn($line) => collect(str_split($line)));
+    return collect(file('inputs/input.txt', FILE_IGNORE_NEW_LINES))->map(fn($line) => collect(str_split($line)));
 }
 
 // parse a line as an array as values and their depth in the array
@@ -30,53 +30,37 @@ function parse($line) : Collection
     return collect($snailfish);
 }
 
-function explode_snailfishes(Collection $values) : array
+function explode_snailfishes(Collection &$values) : bool
 {
-    $exploded = false;
-    $values = $values->toArray();
     foreach($values as $i => list($value, $depth)) {
         if ($depth > 4) {
-            if ($i > 0) {
-                $values[$i-1][0] += $value;
-            }
-            if ($i+2<(count($values))) {
-                $values[$i+2][0] += $values[$i+1][0];
-            }
-            array_splice($values, $i, 2, [[0, $depth - 1 ]]);
-            $values = array_values($values);
-            $exploded = true;
-            break;
+            if ($i > 0) $values->splice($i-1, 1, [[$values[$i-1][0] + $value, $values[$i-1][1]]]);
+            if ($i+2<(count($values))) $values->splice($i+2, 1, [[$values[$i+2][0] +$values[$i+1][0], $values[$i+2][1]]]);
+            $values->splice($i, 2, [[0, $depth - 1 ]]);
+            return true;
         }
     }
-    $values = collect($values);
-    return [$values, $exploded];
+    return false;
 }
 
-function split_snailfishes($values) : array
+function split_snailfishes(Collection &$values) : bool
 {
-    $split = false;
-    $values = $values->toArray();
     foreach($values as $i => $value) {
         if ($value[0] >= 10) {
-            $replacement = [[floor($value[0]/2), $value[1]+1], [ceil($value[0]/2), $value[1]+1]];
-            array_splice($values, $i, 1, $replacement);
-            $values = array_values($values);
-            $split = true;
-            break;
+            $values->splice($i, 1, [[floor($value[0]/2), $value[1]+1], [ceil($value[0]/2), $value[1]+1]]);
+            return true;
         }
     }
-    return [collect($values), $split];
+    return false;
 }
 
 function calculate_magnitude(Collection $values) : int
 {
-    $values = $values->toArray();
     while(count($values) > 1) {
         foreach(range(0, count($values)-1) as $i) {
-            // find a matching pair
             if($values[$i][1] === $values[$i+1][1]) {
                 $value = ($values[$i][0]*3) + ($values[$i+1][0]*2);
-                array_splice($values, $i, 2, [[$value, $values[$i][1] - 1]]);
+                $values->splice($i, 2, [[$value, $values[$i][1] - 1]]);
                 break;
             }
         }
@@ -87,8 +71,8 @@ function calculate_magnitude(Collection $values) : int
 function calculate_max_magnitude(Collection $snailfish) : int
 {
     $magnitudes = [];
-    foreach($snailfish as $i => $fish) {
-        foreach($snailfish as $j => $fish) {
+    foreach($snailfish as $i => $fish1) {
+        foreach($snailfish as $j => $fish2) {
             if ($i === $j) continue;
             $pair = collect([$snailfish[$i], $snailfish[$j]]);
             $magnitudes[] = calculate_magnitude(process($pair));
@@ -110,17 +94,7 @@ function process($input)
         $values = $values->concat($next_line)->map(fn($i) => [$i[0], $i[1]+1]);
 
         // now explode and/or split the resulting combined array
-        while(true) {
-            [$values, $exploded] = explode_snailfishes($values);
-            if ($exploded) continue;
-
-            [$values, $split] = split_snailfishes($values);
-            if ($split) {
-                continue;
-            }
-
-            break;
-        }
+        while(explode_snailfishes($values) || split_snailfishes($values)) continue;
     }
     return $values;
 }
