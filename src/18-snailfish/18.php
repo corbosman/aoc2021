@@ -34,9 +34,13 @@ function explode_snailfishes(Collection &$values) : bool
 {
     foreach($values as $i => list($value, $depth)) {
         if ($depth > 4) {
+            // current value added to previous value (if exists)
             if ($i > 0) $values->splice($i-1, 1, [[$values[$i-1][0] + $value, $values[$i-1][1]]]);
-            if ($i+2<(count($values))) $values->splice($i+2, 1, [[$values[$i+2][0] +$values[$i+1][0], $values[$i+2][1]]]);
+            // current value is added to the next value (if exists)
+            if ($i+2<(count($values))) $values->splice($i+2, 1, [[$values[$i+2][0] + $values[$i+1][0], $values[$i+2][1]]]);
+            // the current pair is imploded to a new pair with value 0 at a lower depth
             $values->splice($i, 2, [[0, $depth - 1 ]]);
+
             return true;
         }
     }
@@ -46,6 +50,8 @@ function explode_snailfishes(Collection &$values) : bool
 function split_snailfishes(Collection &$values) : bool
 {
     foreach($values as $i => $value) {
+        // loop over all the value/depth pairs, the first pair we find that has a value higher than 10, replace it with
+        // 2 new pairs at a higher depth
         if ($value[0] >= 10) {
             $values->splice($i, 1, [[floor($value[0]/2), $value[1]+1], [ceil($value[0]/2), $value[1]+1]]);
             return true;
