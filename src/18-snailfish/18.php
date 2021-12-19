@@ -127,14 +127,13 @@ function process($input)
     }
     return $values;
 }
-$time1 = microtime(true);
 
-$snailfish = snailfish();
-$values    = process(snailfish());
-$magnitude = calculate_magnitude($values);
+$time1         = microtime(true);
+$values        = process(snailfish());
+$magnitude     = calculate_magnitude($values);
 $max_magnitude = calculate_max_magnitude(snailfish());
+$time2         = microtime(true);
 
 output("17a={$magnitude}");
 output("17b={$max_magnitude}");
-$time2 = microtime(true);
 output("time = " . round(($time2-$time1) * 1000,0) . " ms");
