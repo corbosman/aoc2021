@@ -1,12 +1,13 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 const INFINITE = 999999999999999;
 
 function load() : array
 {
-    $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
+    $input = collect(input('input.txt'))->map(fn($i)=>str_split($i));
     return $input->toArray();
 }
 
@@ -101,10 +102,13 @@ class Dijkstra
     }
 }
 
-$cave = load();
+$cave         = load();
 $minimum_risk = (new Dijkstra($cave))->shortest([0,0]);
-output("15a={$minimum_risk}");
+$time2        = microtime(true);
+solution($minimum_risk, $time1, $time2, '15a');
 
-$cave = expand($cave);
+$time3        = microtime(true);
+$cave         = expand($cave);
 $minimum_risk = (new Dijkstra($cave))->shortest([0,0]);
-output("15b={$minimum_risk}");
+$time4        = microtime(true);
+solution($minimum_risk, $time1, $time2, '15b');

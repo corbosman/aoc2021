@@ -1,12 +1,12 @@
 #!/usr/bin/env php
 <?php
-
 use Tightenco\Collect\Support\Collection;
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function load() : array
 {
-    return collect(file('input.txt', FILE_IGNORE_NEW_LINES))->reduceSpread(function($coordinates, $folds, $v) {
+    return collect(input('input.txt'))->reduceSpread(function($coordinates, $folds, $v) {
         if (preg_match('/^fold along (.*)=(\d+)$/', $v, $m)) $folds = $folds->concat([[$m[1], (int)$m[2]]]);
         elseif (preg_match('/^(\d+),(\d+)$/', $v, $m))       $coordinates = $coordinates->concat([[(int)$m[1], (int)$m[2]]]);
         return [$coordinates, $folds];
@@ -57,5 +57,8 @@ function fold(Collection $coordinates, Collection $folds) : Collection
 
 [$coordinates, $folds] = load();
 $coordinates = fold($coordinates, $folds);
-print_paper($coordinates->toArray());
+//print_paper($coordinates->toArray());
+$time2 = microtime(true);
+
+solution('EPLGRULR', $time1, $time2, '13-alt');
 

@@ -1,16 +1,18 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
-$input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>collect(str_split($i)));
+$input = collect(input('input.txt'))->map(fn($i)=>collect(str_split($i)));
 $width = count($input[0])-1;
 $height = count($input)-1;
 
 $low_points = find_low_points($input, $width, $height);
 $basins     = $low_points->map(fn($point) => flood($input, $point, $width, $height))->sort()->reverse()->take(3);
 $output     = $basins->reduce(fn($c,$b)=>$c*$b,1);
+$time2 = microtime(true);
 
-output($output);
+solution($output, $time1, $time2, '9b');
 
 
 function find_low_points($input, $width, $height) : ArrayAccess

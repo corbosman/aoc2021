@@ -1,11 +1,12 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 const SIZE  = 10;
 const STEPS = 100;
 
-$octopuses = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i))->map(fn($i)=>collect(map(fn($j)=>(int)$j, $i)));
+$octopuses = collect(input('input.txt'))->map(fn($i)=>str_split($i))->map(fn($i)=>collect(map(fn($j)=>(int)$j, $i)));
 $flashes = 0;
 
 for($i=1; $i<=STEPS; $i++) {
@@ -13,7 +14,8 @@ for($i=1; $i<=STEPS; $i++) {
     [$octopuses, $flashes] = flash($octopuses, $flashes);
 }
 
-output($flashes);
+$time2 = microtime(true);
+solution($flashes, $time1, $time2, '11a');
 
 function flash($octopuses, $flashes) : array
 {

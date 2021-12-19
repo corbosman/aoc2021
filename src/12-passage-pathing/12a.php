@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function load() : array
 {
-    return map(fn($i)=>explode('-', $i), file('input.txt', FILE_IGNORE_NEW_LINES));
+    return map(fn($i)=>explode('-', $i), input('input.txt'));
 }
 
 function close(string $entrance, array $paths) : array
@@ -48,4 +49,5 @@ function explore(string $entrance, array $paths) : int
 $caves = load();
 $sum   = explore('start', $caves);
 
-output($sum);
+$time2 = microtime(true);
+solution($sum, $time1, $time2, '12a');

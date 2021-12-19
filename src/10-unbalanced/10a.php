@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
-$input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i));
+$input = collect(input('input.txt'))->map(fn($i)=>str_split($i));
 
 $brackets = [']' => '[', '}' => '{', ')' => '(', '>' => '<'];
 $score    = [')' => 3, ']' => 57, '}' => 1197, '>' => 25137];
@@ -20,5 +21,6 @@ foreach($input as $line) {
     }
 }
 
-output($errors->sum());
+$time2 = microtime(true);
+solution($errors->sum(), $time1, $time2, '10a');
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
-$input = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>collect(str_split($i)));
+$input = collect(input('input.txt'))->map(fn($i)=>collect(str_split($i)));
 $width = count($input[0])-1;
 $height = count($input)-1;
 
@@ -12,4 +13,5 @@ $level = $input->mapWithKeys(fn($r,$i) => [$i => $r->filter(fn($h, $j) => ($i ==
                                                                           ($i == $height or $h < $input[$i+1][$j]))]
 )->flatten()->map(fn($i)=>$i+1)->sum();
 
-output($level);
+$time2 = microtime(true);
+solution($level, $time1, $time2, '9a');

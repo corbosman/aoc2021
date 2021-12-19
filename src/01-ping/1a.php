@@ -2,9 +2,13 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-$count = collect(file('input.txt', FILE_IGNORE_NEW_LINES))
+$time1=microtime(true);
+
+$a = collect(input('/input.txt'))
             ->sliding(2)
             ->filter(fn($w)=>$w->first()<$w->last())
             ->count();
 
-output($count);
+$time2=microtime(true);
+
+solution($a, $time1, $time2, '1a');

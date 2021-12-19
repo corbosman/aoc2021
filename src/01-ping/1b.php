@@ -2,11 +2,15 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-$output = collect(file('input.txt', FILE_IGNORE_NEW_LINES))
-            ->sliding(3)
-            ->map(fn($w)=>$w->sum())
-            ->sliding(2)
-            ->filter(fn($w)=>$w->first()<$w->last())
-            ->count();
+$time1=microtime(true);
 
-output($output);
+$output = collect(input('input.txt'))
+    ->sliding(3)
+    ->map(fn($w)=>$w->sum())
+    ->sliding(2)
+    ->filter(fn($w)=>$w->first()<$w->last())
+    ->count();
+
+$time2=microtime(true);
+
+solution($output, $time1, $time2, '1b');

@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function read_transmission() : Generator
 {
-    foreach(str_split(file('inputs/input.txt', FILE_IGNORE_NEW_LINES)[0]) as $hex) {
+    foreach(str_split(input('inputs/input.txt')[0]) as $hex) {
         foreach(str_split(substr('000' . decbin(hexdec($hex)), -4)) as $bit) {
             yield $bit;
         }
@@ -192,6 +193,12 @@ class PacketDecoder
 
 $msg    = read_transmission();
 $packet = (new PacketDecoder($msg))->decode();
+$output = $packet->checksum();
+$time2  = microtime(true);
 
-output("16a = {$packet->checksum()}");
-output("16b = {$packet->evaluate()}");
+solution($output, $time1, $time2, '16a');
+
+$time1  = microtime(true);
+$output = $packet->evaluate();
+$time2  = microtime(true);
+solution($output, $time1, $time2, '16b');

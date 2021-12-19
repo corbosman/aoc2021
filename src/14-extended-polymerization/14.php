@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function load() : array
 {
-    $input = collect(file('input.txt', FILE_IGNORE_NEW_LINES));
+    $input = collect(input('input.txt'));
     return [
         collect(str_split($input->first())),
         $input->splice(2)->mapWithKeys(fn($i)=>[$i[0].$i[1] => [$i[0].$i[6], $i[6].$i[1]]])->toArray()
@@ -44,9 +45,12 @@ function steps(iterable $rules, iterable $pairs, iterable $atoms, int $steps) : 
 [$polymer, $rules] = load();
 $pairs = pairs($polymer);
 $atoms = atomize($polymer);
-
+$time2 = microtime(true);
 [$atoms, $pairs] = steps($rules, $pairs, $atoms, 10);
-output("10=" . max($atoms)-min($atoms));
+solution(max($atoms)-min($atoms), $time1, $time2, '14a');
 
+$time3 = microtime(true);
 [$atoms, $pairs] = steps($rules, $pairs, $atoms, 30);
-output("40=" . max($atoms)-min($atoms));
+$time4 = microtime(true);
+
+solution(max($atoms)-min($atoms), $time3, $time4, '14b');

@@ -3,8 +3,9 @@
     "type": "project",
     "require": {
         "php": "^8.0",
-        "tightenco/collect": "^8.68",
-        "ext-ctype": "*"
+        "ext-ctype": "*",
+        "nunomaduro/termwind": "^1.2",
+        "tightenco/collect": "^8.68"
     },
     "autoload": {
         "files": [

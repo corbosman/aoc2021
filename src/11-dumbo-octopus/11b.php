@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 const SIZE  = 10;
 
-$octopuses = collect(file('input.txt', FILE_IGNORE_NEW_LINES))->map(fn($i)=>str_split($i))->map(fn($i)=>collect(map(fn($j)=>(int)$j, $i)));
+$octopuses = collect(input('input.txt'))->map(fn($i)=>str_split($i))->map(fn($i)=>collect(map(fn($j)=>(int)$j, $i)));
 
 for($i=1;; $i++) {
     $octopuses->transform(fn($i)=>$i->transform(fn($j)=>$j+1));
@@ -12,7 +13,8 @@ for($i=1;; $i++) {
     if ($octopuses->flatten()->sum() === 0) break;
 }
 
-output($i);
+$time2 = microtime(true);
+solution($i, $time1, $time2, '11b');
 
 function flash($octopuses)
 {

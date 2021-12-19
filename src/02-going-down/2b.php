@@ -2,7 +2,8 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
 
-$input = collect(file('input.txt', FILE_IGNORE_NEW_LINES));
+$time1 = microtime(true);
+$input = collect(input('input.txt'));
 
 $position = $input->reduce(function($pos, $move) {
     [$direction, $distance] = explode(' ', $move);
@@ -13,4 +14,5 @@ $position = $input->reduce(function($pos, $move) {
     };
 }, ['x' => 0, 'y' => 0, 'a' => 0]);
 
-output($position['x'] * $position['y']);
+$time2=microtime(true);
+solution($position['x'] * $position['y'], $time1, $time2, '2b');

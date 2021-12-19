@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function load() : array
 {
-    return map(fn($i)=>explode('-', $i), file('input.txt', FILE_IGNORE_NEW_LINES));
+    return map(fn($i)=>explode('-', $i), input('input.txt'));
 }
 
 function study(array $tunnels) : array
@@ -76,5 +77,5 @@ function explore(string $entrance, array $tunnels, array $caves, bool $twice = f
 $tunnels = load();
 $caves   = study($tunnels);
 $count   = explore('start', $tunnels, $caves, false);
-
-output($count);
+$time2   = microtime(true);
+solution($count, $time1, $time2, '12b');

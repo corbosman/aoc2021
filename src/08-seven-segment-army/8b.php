@@ -1,17 +1,17 @@
 #!/usr/bin/env php
 <?php
-
 use Tightenco\Collect\Support\Collection;
-
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
-$count = collect(file('input.txt', FILE_IGNORE_NEW_LINES))
+$count = collect(input('input.txt', FILE_IGNORE_NEW_LINES))
     ->map(fn($i)=>preg_split('/ \| /', $i))
     ->map(fn($i)=>[collect(explode(' ', $i[0])), collect(explode(' ', $i[1]))])
     ->map(fn($i)=>decrypt(find_cipher($i[0]), $i[1]))
     ->sum();
 
-output("count={$count}");
+$time2 = microtime(true);
+solution($count, $time1, $time2, '8b');
 
 /* -------------------------------------- */
 

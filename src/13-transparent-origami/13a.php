@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function load() : array
 {
-    return reduce(file('input.txt', FILE_IGNORE_NEW_LINES), function($c, $v) {
+    return reduce(input('input.txt'), function($c, $v) {
         if (preg_match('/^fold along (.*)=(\d+)$/', $v, $m)) $c[1][] = [$m[1], (int)$m[2]];
         elseif (preg_match('/^(\d+),(\d+)$/', $v, $m))       $c[0][] = [(int)$m[2], (int)$m[1]];
         return $c;
@@ -59,8 +60,10 @@ function fold(array $paper, array $folds) : array
 [$coordinates, $folds] = load();
 $paper = fill($coordinates);
 
-$first_fold = $folds[0];
+$first_fold   = $folds[0];
 $folded_paper = fold($paper, [$first_fold]);
-$dots = sum(map('count',$folded_paper));
-output($dots);
+$dots         = sum(map('count',$folded_paper));
+$time2        = microtime(true);
+
+solution($dots, $time1, $time2, '13a');
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
-$input = collect(file('input.txt', FILE_IGNORE_NEW_LINES));
+$input = collect(input('input.txt'));
 
 $score = $input->reduce(function($incomplete, $line) {
             $stack = collect();
@@ -16,7 +17,9 @@ $score = $input->reduce(function($incomplete, $line) {
     ->sort()
     ->values();
 
-output($score[count($score)/2]);
+$score = $score[floor(count($score)/2)];
+$time2 = microtime(true);
+solution($score, $time1, $time2, '10b');
 
 function pair($chr) : string
 {

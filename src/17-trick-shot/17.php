@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
+$time1 = microtime(true);
 
 function target_area()
 {
-    preg_match_all('/(-?[0-9]+)/', file('inputs/input.txt', FILE_IGNORE_NEW_LINES)[0], $matches);
+    preg_match_all('/(-?[0-9]+)/', input('inputs/input.txt')[0], $matches);
     return map(fn($i)=>(int)$i, $matches[0]);
 }
 
@@ -77,15 +78,13 @@ function simulate(int $x1, int $x2, int $y1, int $y2, int $max_height) : int
     return count($landed);
 }
 
-$time1 = microtime(true);
-
 [$x1, $x2, $y1, $y2] = target_area();
-
 $max_height = abs($y1) * (abs($y1)-1)/2;
-output("17a = {$max_height}");
-
-$vector_count = simulate($x1, $x2, $y1, $y2, $max_height);
-output("17b = {$vector_count}");
-
 $time2 = microtime(true);
-output("time = " . ($time2-$time1) * 1000 . " ms");
+solution($max_height, $time1, $time2, '17a');
+
+$time1 = microtime(true);
+$vector_count = simulate($x1, $x2, $y1, $y2, $max_height);
+$time2 = microtime(true);
+solution($vector_count, $time1, $time2, '17b');
+

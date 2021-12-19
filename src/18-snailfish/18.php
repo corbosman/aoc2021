@@ -5,7 +5,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function snailfish() : Collection
 {
-    return collect(file('inputs/input.txt', FILE_IGNORE_NEW_LINES))->map(fn($line) => collect(str_split($line)));
+    return collect(input('inputs/input.txt'))->map(fn($line) => collect(str_split($line)));
 }
 
 // parse a line as an array as values and their depth in the array
@@ -108,9 +108,10 @@ function process($input)
 $time1         = microtime(true);
 $values        = process(snailfish());
 $magnitude     = calculate_magnitude($values);
+$time2         = microtime(true);
+solution($magnitude, $time1, $time2, '18a');
+
+$time1         = microtime(true);
 $max_magnitude = calculate_max_magnitude(snailfish());
 $time2         = microtime(true);
-
-output("17a={$magnitude}");
-output("17b={$max_magnitude}");
-output("time = " . round(($time2-$time1) * 1000,0) . " ms");
+solution($max_magnitude, $time1, $time2, '18b');
