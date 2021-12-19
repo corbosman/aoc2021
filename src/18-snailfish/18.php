@@ -9,7 +9,7 @@ function snailfish() : Collection
 }
 
 // parse a line as an array as values and their depth in the array
-function parse($line) : Collection
+function parse(Collection $line) : Collection
 {
     $snailfish = [];
     $depth = 0;
