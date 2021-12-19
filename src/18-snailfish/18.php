@@ -112,9 +112,7 @@ function process($input)
         // now explode and/or split the resulting combined array
         while(true) {
             [$values, $exploded] = explode_snailfishes($values);
-            if ($exploded) {
-                continue;
-            }
+            if ($exploded) continue;
 
             [$values, $split] = split_snailfishes($values);
             if ($split) {
