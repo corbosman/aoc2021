@@ -36,8 +36,10 @@ class Beacon
         $this->rotate();
     }
 
-    public function fix_position(array $position)
+    public function fix_position(array $position, int $rotation)
     {
+        [$x, $y, $z] = $this->rotations[$rotation];
+        $position = [$x + $position[0], $y + $position[1], $z + $position[2]];
         $this->absolute_position = $position;
     }
 
@@ -92,8 +94,7 @@ class Scanner
 
         /* also fix the location for all beacons */
         foreach($this->beacons as $k => $beacon) {
-            [$x, $y, $z] = $this->rotated_beacons[$rotation][$k];
-            $beacon->fix_position([$x + $this->position[0], $y + $this->position[1], $z + $this->position[2]]);
+            $beacon->fix_position($position, $rotation);
         }
 
     }
