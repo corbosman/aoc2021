@@ -174,6 +174,20 @@ class Probe
         }
         return $this;
     }
+
+    public function max_distance()
+    {
+        $distance = 0;
+        foreach($this->scanners as $k1 => $scanner1) {
+            foreach($this->scanners as $k2 => $scanner2) {
+                if ($k1 === $k2) continue;
+                $manhattan_distance = manhattan_distance($scanner1->position, $scanner2->position);
+                if ($manhattan_distance > $distance) $distance = $manhattan_distance;
+            }
+        }
+
+        return $distance;
+    }
 }
 
 $time1   = microtime(true);
@@ -181,6 +195,7 @@ $report  = get_scanner_report();
 $probe   = (new Probe)->analyze($report)->locate_scanners();
 $beacons = $probe->beacons()->count();
 $time2   = microtime(true);
-
+$max_distance = $probe->max_distance();
+$time3   = microtime(true);
 solution($beacons, $time1, $time2, '19a');
-
+solution($max_distance, $time2, $time3, '19b');
