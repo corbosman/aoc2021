@@ -197,5 +197,6 @@ $beacons = $probe->beacons()->count();
 $time2   = microtime(true);
 $max_distance = $probe->max_distance();
 $time3   = microtime(true);
+
 solution($beacons, $time1, $time2, '19a');
 solution($max_distance, $time2, $time3, '19b');
