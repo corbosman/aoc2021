@@ -104,8 +104,7 @@ class Scanner
     {
         foreach ($located_scanners as $located_scanner) {
             foreach ($this->rotated_beacons as $i => $rotation) {
-                $position = $located_scanner->try_rotation($rotation, 3);
-                if ($position) {
+                if (($position = $located_scanner->try_rotation($rotation, 3)) !== null) {
                     $this->fix_position($position, $i);
                     return true;
                 }
