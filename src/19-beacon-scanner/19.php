@@ -3,11 +3,12 @@
 use Tightenco\Collect\Support\Collection;
 require __DIR__ . '/../../vendor/autoload.php';
 
-function get_report()
+function get_scanner_report()
 {
-    $input = input('inputs/input_e.txt');
+    $input = input('inputs/input.txt');
     $report = [];
     $scanner = -1;
+
     foreach($input as $i) {
         if ($i === '') continue;
         if (str_contains($i, 'scanner')) {
@@ -28,140 +29,157 @@ function manhattan_distance(array $c1, array $c2) : int
 
 class Beacon
 {
-    public ?string $id = null;
     public ?array $absolute_position = null;
-    public Collection $distances;
-    public ?int $max_distance = null;
+    public ?array $rotations = null;
 
     public function __construct(public array $relative_position) {
-        $this->distances = collect();
+        $this->rotate();
     }
 
-    public function set_absolute_position(?array $pos = null)
+    public function fix_position(array $position)
     {
-        $this->absolute_position = $pos ?: $this->relative_position;
+        $this->absolute_position = $position;
     }
 
-    public function set_id($id)
+    // create all rotations for this beacon
+    public function rotate()
     {
-        $this->id = $id;
+        [$x, $y, $z] = $this->relative_position;
+
+        $this->rotations = [
+            [ $x,  $y,  $z],   [ $x, -$z,  $y],   [ $x, -$y, -$z],
+            [ $y,  $x, -$z],   [-$z,  $x, -$y],   [-$x, -$y,  $z],
+            [-$x, -$z, -$y],   [-$x,  $y, -$z],   [-$x,  $z,  $y],
+            [-$z, -$x,  $y],   [-$z,  $y,  $x],   [ $y,  $z,  $x],
+            [ $y, -$x,  $z],   [ $z, -$x, -$y],   [-$y, -$x, -$z],
+            [ $z, -$y,  $x],   [-$y, -$z,  $x],   [-$z, -$y, -$x],
+            [-$y,  $z, -$x],   [ $z,  $y, -$x],   [ $y, -$z, -$x],
+            [ $x,  $z, -$y],   [-$y,  $x,  $z],   [ $z,  $x,  $y],
+        ];
     }
+
 }
 
 class Scanner
 {
-    public ?array $position = null;
-    public Collection $beacons;
+    public ?array $position = null;                 // absolute position if known
+    public ?int $rotation   = null;                 // rotation of this scanner if known
+    public Collection $beacons;                     // all beacons
+    public ?Collection $rotated_beacons = null;     // a cache of all rotated beacon positions
 
     public function __construct(array $beacons) {
         $this->beacons = collect($beacons)->map(fn($beacon) => new Beacon($beacon));
+        $this->rotated_beacons = $this->create_rotations();
     }
 
-    public function set_position(array $position)
+    // create a cache of all rotations for all beacons known to this scanner
+    function create_rotations() : Collection
+    {
+        $rotations = [];
+        for($i=0; $i<24; $i++) {
+            foreach ($this->beacons as $beacon) {
+                $rotations[$i][] = $beacon->rotations[$i];
+            }
+        }
+        return collect($rotations);
+    }
+
+    /* fix this scanner to an absolute position */
+    public function fix_position(array $position, int $rotation) : void
     {
         $this->position = $position;
+        $this->rotation = $rotation;
+
+        /* also fix the location for all beacons */
+        foreach($this->beacons as $k => $beacon) {
+            [$x, $y, $z] = $this->rotated_beacons[$rotation][$k];
+            $beacon->fix_position([$x + $this->position[0], $y + $this->position[1], $z + $this->position[2]]);
+        }
+
     }
 
-    public function calculate_beacon_distances()
+    // try to match our position to known located scanners to get an absolute position fix
+    public function locate($located_scanners) : bool
     {
-        foreach($this->beacons as $b1) {
-            foreach($this->beacons as $b2) {
-                $distance = manhattan_distance($b1->relative_position, $b2->relative_position);
-                if ($distance !== 0) $b1->distances->push($distance);
+        foreach ($located_scanners as $located_scanner) {
+            foreach ($this->rotated_beacons as $i => $rotation) {
+                $position = $located_scanner->try_rotation($rotation, 3);
+                if ($position) {
+                    $this->fix_position($position, $i);
+                    return true;
+                }
             }
-            $b1->distances = $b1->distances->sort()->values();
-            $b1->max_distance = $b1->distances->max();
         }
+        return false;
+    }
+
+    /* try to match beacons from a known scanner to another scanner */
+    public function try_rotation(array $lost_beacons): ?array
+    {
+        $deltas = [];
+
+        $located_beacons = $this->rotated_beacons[$this->rotation];
+
+        foreach ($located_beacons as list($x1, $y1, $z1)) {
+            foreach ($lost_beacons as list($x2, $y2, $z2)) {
+                $delta = [$x1 - $x2, $y1 - $y2, $z1 - $z2];
+
+                // this is a trick to get a unique index, as manhattan distance does not work.
+                $index = implode(',', $delta);
+                $deltas[$index] = isset($deltas[$index]) ? $deltas[$index] + 1 : 1;
+
+                /* should be >= 12 but you can actually already use 3 */
+                if ($deltas[$index] >= 3) return [$delta[0] + $this->position[0], $delta[1] + $this->position[1], $delta[2] + $this->position[2],];
+            }
+        }
+        return null;
     }
 }
 
-class Fleet
+class Probe
 {
-    public function __construct(public Collection $scanners)
+    public ?Collection $scanners = null;
+
+    public function analyze($report) : Probe
     {
-        $this->scanners = $this->scanners->map(fn($scanner) => new Scanner($scanner));
-
-        // designate the first scanner as absolutely positioned
-        $this->scanners->first()->set_position([0,0,0]);                        // value of first scanner is known
-        $this->scanners->first()->beacons->each->set_absolute_position();       // set all absolute positions for these beacons
-        $this->scanners->first()->beacons->each(function($beacon) {             // give them all a uniq id
-            $id = uniqid(true);
-            $beacon->set_id($id);
-        });
-    }
-
-    public function beacons()
-    {
-        return $this->scanners->reduce(function($beacons, $scanner){
-            return $beacons->concat($scanner->beacons);
-        }, collect());
-    }
-
-    public function locate_scanners() : Fleet
-    {
-        $scanners = $this->scanners->whereNull('position');
-        while($scanners->count() > 0) {
-            $scanner = $scanners->pop();
-
-        }
+        $this->scanners = $report->map(fn($scanner) => new Scanner($scanner));
+        $this->scanners->first()->fix_position([0,0,0], 0);
         return $this;
     }
 
-    public function identify_beacons()
+    /* return all unique beacons in our fleet of beacons */
+    public function beacons() : Collection
     {
-        $this->scanners->each->calculate_beacon_distances();
+        return $this->scanners->reduce(function($beacons, $scanner){
+            return $beacons->concat($scanner->beacons);
+        }, collect())->unique(fn($beacon) => $beacon->absolute_position);
+    }
 
-        $beacons = $this->beacons();
-        $identified_beacons   = $beacons->whereNotNull('id');
-        $unidentified_beacons = $beacons->whereNull('id');
+    /* try to locate all scanners */
+    public function locate_scanners() : Probe
+    {
+        $located_scanners = $this->scanners->whereNotNull('position');
+        $lost_scanners    = $this->scanners->whereNull('position');
 
-        while($unidentified_beacons->count() > 0) {
-            dump("unidentified = {$unidentified_beacons->count()} , identified = {$identified_beacons->count()}");
+        while (count($lost_scanners) > 0) {
+            $lost_scanner = $lost_scanners->shift();
+            $located = $lost_scanner->locate($located_scanners);
 
-            // take a beacon from the stack
-            $unidentified_beacon = $unidentified_beacons->shift();
-
-            // compare it with known beacons
-            $identified = false;
-            foreach ($identified_beacons as $identified_beacon) {
-                $count = $unidentified_beacon->distances->intersect($identified_beacon->distances)->count();
-                // dump("count = {$count}");
-                if ($count >= 10) {
-                    dump("found match");
-                    $unidentified_beacon->set_id($identified_beacon->id);
-                    $identified_beacons->push($unidentified_beacon);
-                    dump("setting existing id {$identified_beacon->id} to unidentified beacon");
-                    $identified = true;
-                }
-            }
-            if (!$identified) {
-                // give this beacon an id
-                $id = uniqid(true);
-                $unidentified_beacon->set_id($id);
-                dump("set new id {$id} to unidentified beacon");
-                // and push it to the identifier beacons stack
-                $identified_beacons->push($unidentified_beacon);
+            if ($located) {
+                $located_scanners->push($lost_scanner);              // scanner was located!
+            } else {
+                $lost_scanners->push($lost_scanner);                 // scanner not located, try again later
             }
         }
-        $group = $identified_beacons->groupBy('id');
-        dd($group);
-
-        $unique_ids = $identified_beacons->pluck('id');
-        dump($unique_ids->unique()->count());
-        //dd($identified_beacons);
-
+        return $this;
     }
 }
-$time1         = microtime(true);
-$report = get_report();
-$fleet  = (new Fleet($report))->locate_scanners();
-$fleet->identify_beacons();
 
-$uniq = $fleet->beacons()->pluck('id')->unique();
-dd($uniq->count());
+$time1   = microtime(true);
+$report  = get_scanner_report();
+$probe   = (new Probe)->analyze($report)->locate_scanners();
+$beacons = $probe->beacons()->count();
+$time2   = microtime(true);
 
-//dd($fleet);
-
-$time2         = microtime(true);
-solution(0, $time1, $time2, '19a');
+solution($beacons, $time1, $time2, '19a');
 
