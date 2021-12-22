@@ -30,13 +30,12 @@ class Board
 
     public function __construct(public int $position) {}
 
-    public function move($count) : void
+    public function move($count) : bool
     {
         $this->position = ($this->position + $count) % 10;
-        dump("  new position = " . $this->position+1);
         $this->score += $this->position + 1;
-        dump("  score = {$this->score}");
         if ($this->score >= 1000) $this->winner = true;
+        return $this->winner;
     }
 }
 
@@ -46,16 +45,10 @@ class Game
     {
         while(true) {
             $roll = $dice->roll() + $dice->roll() + $dice->roll();
-            dump("p1 roll = {$roll}");
-            $player1->move($roll);
-
-            if ($player1->winner) break;
+            if ($player1->move($roll)) break;
 
             $roll = $dice->roll() + $dice->roll() + $dice->roll();
-            dump("p2 roll = {$roll}");
-            $player2->move($roll);
-
-            if ($player2->winner) break;
+            if($player2->move($roll)) break;
         }
         return [$player1, $player2];
     }
@@ -73,7 +66,4 @@ $loser = $player1->winner ? $player2 : $player1;
 $score = $dice->counter * $loser->score;
 
 $time2              = microtime(true);
-$time3              = microtime(true);
-
 solution($score, $time1, $time2, '21a');
-//solution(0, $time2, $time3, '20b');
