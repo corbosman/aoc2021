@@ -13,17 +13,6 @@ function load() : array
     return [$image, $enhancer];
 }
 
-function print_image($pixels) : void
-{
-    for ($x=0; $x<count($pixels); $x++) {
-        for ($y=0; $y<count($pixels[0]); $y++) {
-            echo $pixels[$x][$y];
-        }
-        echo "\n";
-    }
-    echo "\n";
-}
-
 class Enhancer {
     // this is alternating between . and # depending on the enhancer.
     public string $background = '.';
