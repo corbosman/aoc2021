@@ -6,8 +6,8 @@ $time1              = microtime(true);
 function load() : array
 {
     $file = input('inputs/input.txt');
-    $player1 = $file[0][strlen($file[0])-1];
-    $player2 = $file[1][strlen($file[1])-1];
+    $player1 = $file[0][strlen($file[0])-1]-1;
+    $player2 = $file[1][strlen($file[1])-1]-1;
     return [$player1, $player2];
 }
 
@@ -18,9 +18,8 @@ class Dice
 
     public function roll() : int
     {
-        if (++$this->value === 101 ) $this->value=1;
-        $this->counter++;
-        return $this->value;
+        $this->counter+=1;
+        return ++$this->value;
     }
 }
 
@@ -33,11 +32,10 @@ class Board
 
     public function move($count) : void
     {
-        for ($i=0; $i<$count; $i++) {
-            if (++$this->position === 11 ) $this->position=1;
-        }
-
-        $this->score += $this->position;
+        $this->position = ($this->position + $count) % 10;
+        dump("  new position = " . $this->position+1);
+        $this->score += $this->position + 1;
+        dump("  score = {$this->score}");
         if ($this->score >= 1000) $this->winner = true;
     }
 }
@@ -48,12 +46,13 @@ class Game
     {
         while(true) {
             $roll = $dice->roll() + $dice->roll() + $dice->roll();
+            dump("p1 roll = {$roll}");
             $player1->move($roll);
-
 
             if ($player1->winner) break;
 
             $roll = $dice->roll() + $dice->roll() + $dice->roll();
+            dump("p2 roll = {$roll}");
             $player2->move($roll);
 
             if ($player2->winner) break;
