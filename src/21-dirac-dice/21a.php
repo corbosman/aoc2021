@@ -14,12 +14,14 @@ function load() : array
 class Dice
 {
     public int $counter = 0;
-    protected int $value = 0;
+    protected int $value = 1;
 
     public function roll() : int
     {
         $this->counter+=1;
-        return ++$this->value;
+        $value = $this->value;
+        $this->value = $value % 100 + 1;
+        return $value;
     }
 }
 

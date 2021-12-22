@@ -4,6 +4,7 @@
     "require": {
         "php": "^8.0",
         "ext-ctype": "*",
+        "cash/lrucache": "^1.0",
         "nunomaduro/termwind": "^1.2",
         "tightenco/collect": "^8.68"
     },
