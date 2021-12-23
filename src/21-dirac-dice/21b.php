@@ -42,8 +42,8 @@ class Game
         return $this;
     }
 
-    /* current player is 0 for player1, 1 for player 2 */
-    public function play($player1_position, $player2_position, $current_player, $player1_score, $player2_score)
+    /* current player is 0 for player1, 1 for player 2, returns an array with the wins for each player */
+    public function play($player1_position, $player2_position, $current_player, $player1_score, $player2_score) : array
     {
         /* last universe, one of them wins, now unroll back to the beginning */
         if ($player1_score >= 21) return [1,0];
