@@ -53,7 +53,6 @@ class Reactor
         [$x1, $x2, $y1, $y2, $z1, $z2]       = $step;
         [$cx1, $cx2, $cy1, $cy2, $cz1, $cz2] = $cube;
 
-        unset($this->cubes[$i]);
         if ($x2 < $cx2) {
             $this->cubes[] = [$x2 + 1, $cx2, $cy1, $cy2, $cz1, $cz2];
         }
@@ -77,6 +76,7 @@ class Reactor
         if ($z1 > $cz1) {
             $this->cubes[] = [max($cx1, $x1), min($cx2, $x2), max($cy1, $y1), min($cy2, $y2), $cz1, $z1 - 1];
         }
+        unset($this->cubes[$i]);
     }
 
     public function count_cubes() : int
