@@ -231,6 +231,17 @@ class Burrow
         }
         return $neighbors;
     }
+
+    public function print_(State $state)
+    {
+        $id = $state->id();
+        $id[2] = $id[4] = $id[6] = $id[8] = ' ';
+        echo "#############\n";
+        echo "#".substr($id, 0, 11)."#\n";
+        echo "###".$id[11]."#".$id[13]."#".$id[15].'#'.$id[17]."###\n";
+        echo "###".$id[12]."#".$id[14]."#".$id[16].'#'.$id[18]."###\n";
+        echo "  #########  \n\n";
+    }
 }
 
 $rooms  = load();
@@ -242,13 +253,5 @@ $energy = (new Burrow())->organise($rooms,'b');
 $time3  = microtime(true);
 solution($energy, $time2, $time3, '23b');
 
-function print_burrow(State $burrow)
-{
-    $id = $burrow->id();
-    $id[2] = $id[4] = $id[6] = $id[8] = ' ';
-    echo "#############\n";
-    echo "#".substr($id, 0, 11)."#\n";
-    echo "###".$id[11]."#".$id[13]."#".$id[15].'#'.$id[17]."###\n";
-    echo "###".$id[12]."#".$id[14]."#".$id[16].'#'.$id[18]."###\n";
-    echo "  #########  \n\n";
-}
+
+
