@@ -47,12 +47,13 @@ class Dijkstra
         $this->cave = $cave;
     }
 
-    protected function neighbors(int $x, int $y, int $width, int $height) : array
+    protected function neighbors(int $x, int $y, int $width, int $height, $visited) : array
     {
         $neighbors = [];
 
         foreach ([[1,0], [0,1], [-1,0], [0,-1]] as list($dx, $dy)) {
-            if ($x+$dx >= 0 && $x+$dx < $height && $y+$dy >= 0 && $y+$dy < $height) {
+            if (isset($visited[$x+$dx][$y+$dy])) continue;
+            if ($x+$dx >= 0 && $x+$dx < $width && $y+$dy >= 0 && $y+$dy < $height) {
                 $neighbors[] = [$x+$dx, $y+$dy];
             }
         }
