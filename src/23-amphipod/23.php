@@ -176,12 +176,11 @@ class Burrow
 
         while($queue->count()) {
             $burrow = $queue->extract();
-
-            // print_burrow($burrow);
-            /* we found the lowest energy! */
-            if ($burrow->organised()) return $energy[$burrow->id()];
-
             $id = $burrow->id();
+
+            /* we found the lowest energy! */
+            if ($burrow->organised()) return $energy[$id];
+
             $neighbors = $this->neighbors($burrow, $visited);
 
             foreach($neighbors as $next_burrow) {
