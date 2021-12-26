@@ -252,19 +252,3 @@ function print_burrow(State $burrow)
     echo "###".$id[12]."#".$id[14]."#".$id[16].'#'.$id[18]."###\n";
     echo "  #########  \n\n";
 }
-
-function print_heap($queue) {
-    if ($queue->count() < 1) return;
-    $qs = [];
-    foreach($queue as $q) {
-        echo $q->id() . " => " . $q->total_energy . "\n";
-        $qs[] = $q;
-    }
-    foreach($qs as $q) {
-        $queue->insert($q);
-    }
-}
-
-function d($str) {
-    //dump ($str);
-}
