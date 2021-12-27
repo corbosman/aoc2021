@@ -59,14 +59,6 @@ class State
         return true;
     }
 
-    public function room_has_unwanted_guests($room) : bool
-    {
-        for($i=0;$i<count($this->rooms[$room]); $i++) {
-            if ($this->rooms[$room][$i] !== null && $this->rooms[$room][$i] !== $room) return true;
-        }
-        return false;
-    }
-
     public function move_from_room_to_hallway($room, $amphipod_position, $hallway_position) : void
     {
         $this->hallway[$hallway_position] = $this->rooms[$room][$amphipod_position];
