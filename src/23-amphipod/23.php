@@ -73,24 +73,18 @@ class State
         $this->rooms[$room][$amphipod_position] = null;
 
         $amphipod = $this->hallway[$hallway_position];
-        $moves    = 1 + $amphipod_position + abs($hallway_position - ROOMS[$room]);
+        $moves = 1 + $amphipod_position + abs($hallway_position - ROOMS[$room]);
         $this->energy_for_this_move = $moves * COST[$amphipod];
     }
 
-    public function move_from_hallway_to_room($hallway_position)
+    public function move_from_hallway_to_room($hallway_position, $room_position)
     {
-        $moves = 0;
-        $type = $this->hallway[$hallway_position];
-        for($i=count($this->rooms[$type])-1; $i>=0; $i--) {
-            if ($this->rooms[$type][$i] === null) {
-                $this->rooms[$type][$i] = $type;
-                $this->hallway[$hallway_position] = null;
-                $moves += $i + 1;
-                break;
-            }
-        }
-        $moves += abs($hallway_position - ROOMS[$type]);
-        $this->energy_for_this_move = $moves * COST[$type];
+        $amphipod = $this->hallway[$hallway_position];
+        $this->rooms[$amphipod][$room_position] = $amphipod;
+
+        $this->hallway[$hallway_position] = null;
+        $moves = abs($hallway_position - ROOMS[$amphipod]) + 1 + $room_position;
+        $this->energy_for_this_move = $moves * COST[$amphipod];
     }
 
     /* find all open positions in the hallway to the left of position */
@@ -117,10 +111,19 @@ class State
         return $positions;
     }
 
-    public function amphipod_that_needs_to_move_out_of_room(int $room)
+    public function amphipod_that_needs_to_move_out_of_room(int $room): ?int
     {
-        for($i=0; $i<count($this->rooms[0]); $i++) {
-            if ($this->rooms[$room][$i] !== null) return $i;
+        for($i=0; $i<count($this->rooms[$room]); $i++) {
+            if ($this->rooms[$room][$i] !== null && $this->rooms[$room][$i] !== $room) return $i;
+        }
+        return null;
+    }
+
+    public function find_free_room_position(int $room) : ?int
+    {
+        for($i=count($this->rooms[$room])-1; $i>=0; $i--) {
+            if ($this->rooms[$room][$i] === null) return $i;
+            if ($this->rooms[$room][$i] !== $room) return null;
         }
         return null;
     }
@@ -129,12 +132,14 @@ class State
     {
         $amphipods = [];
 
-        foreach($this->hallway as $position => $amphipod) {
-            if ($amphipod === null  || $amphipod === false || $this->room_has_unwanted_guests($amphipod)) continue;
+        foreach($this->hallway as $amphipod_position => $amphipod) {
+            /* nothing to move from this position to a room */
+            if ($amphipod === null || $amphipod === false || $this->hallway_blocked($amphipod_position, ROOMS[$amphipod])) continue;
 
-            if ($this->hallway_blocked($position, ROOMS[$amphipod])) continue;
+            /* find a free spot in the room */
+            if (($room_position = $this->find_free_room_position($amphipod)) === null) continue;
 
-            $amphipods[] = $position;
+            $amphipods[] = [$amphipod_position, $room_position];
         }
         return $amphipods;
     }
@@ -179,6 +184,7 @@ class Burrow
         while($queue->count()) {
             $burrow = $queue->extract();
             $id = $burrow->id();
+            // $this->print($burrow);
 
             /* we found the lowest energy! */
             if ($burrow->organised()) return $energy[$id];
@@ -212,7 +218,6 @@ class Burrow
         foreach($burrow->rooms as $room => $ap) {
             /* no amphipods that need to leave */
             if (($amphipod_position = $burrow->amphipod_that_needs_to_move_out_of_room($room)) === null) continue;
-            // if (!$burrow->room_has_unwanted_guests($room)) continue;
 
             $free_hallway_positions = array_merge($burrow->find_left_positions(ROOMS[$room]),
                                                   $burrow->find_right_positions(ROOMS[$room]));
@@ -225,16 +230,16 @@ class Burrow
             }
         }
         /* move from hallway to room */
-        foreach($burrow->amphipods_that_can_go_home() as $position) {
+        foreach($burrow->amphipods_that_can_go_home() as list($amphipod_position, $room_position)) {
             $next_burrow = clone($burrow);
-            $next_burrow->move_from_hallway_to_room($position);
+            $next_burrow->move_from_hallway_to_room($amphipod_position, $room_position);
             if (isset($visited[$next_burrow->id()])) continue;
             $neighbors[] = $next_burrow;
         }
         return $neighbors;
     }
 
-    public function print_(State $state)
+    public function print(State $state)
     {
         $id = $state->id();
         $id[2] = $id[4] = $id[6] = $id[8] = ' ';
