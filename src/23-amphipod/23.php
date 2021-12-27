@@ -67,20 +67,14 @@ class State
         return false;
     }
 
-    public function move_from_room_to_hallway($room, $hallway_position) : void
+    public function move_from_room_to_hallway($room, $amphipod_position, $hallway_position) : void
     {
-        $moves = 0;
-        /* find the first position to move from the top */
-        for($i=0; $i<count($this->rooms[A]); $i++) {
-            if ($this->rooms[$room][$i] !== null) {
-                $this->hallway[$hallway_position] = $this->rooms[$room][$i];
-                $this->rooms[$room][$i] = null;
-                $moves += $i + 1;
-                break;
-            }
-        }
-        $moves += abs($hallway_position - ROOMS[$room]);
-        $this->energy_for_this_move = $moves * COST[$this->hallway[$hallway_position]];
+        $this->hallway[$hallway_position] = $this->rooms[$room][$amphipod_position];
+        $this->rooms[$room][$amphipod_position] = null;
+
+        $amphipod = $this->hallway[$hallway_position];
+        $moves    = 1 + $amphipod_position + abs($hallway_position - ROOMS[$room]);
+        $this->energy_for_this_move = $moves * COST[$amphipod];
     }
 
     public function move_from_hallway_to_room($hallway_position)
@@ -121,6 +115,14 @@ class State
             $positions[] = $i;                          // we can move here
         }
         return $positions;
+    }
+
+    public function amphipod_that_needs_to_move_out_of_room(int $room)
+    {
+        for($i=0; $i<count($this->rooms[0]); $i++) {
+            if ($this->rooms[$room][$i] !== null) return $i;
+        }
+        return null;
     }
 
     public function amphipods_that_can_go_home() : array
@@ -208,15 +210,16 @@ class Burrow
 
         /* move from room to hallway */
         foreach($burrow->rooms as $room => $ap) {
-            /* no amphipods that dont belong */
-            if (!$burrow->room_has_unwanted_guests($room)) continue;
+            /* no amphipods that need to leave */
+            if (($amphipod_position = $burrow->amphipod_that_needs_to_move_out_of_room($room)) === null) continue;
+            // if (!$burrow->room_has_unwanted_guests($room)) continue;
 
             $free_hallway_positions = array_merge($burrow->find_left_positions(ROOMS[$room]),
                                                   $burrow->find_right_positions(ROOMS[$room]));
 
-            foreach($free_hallway_positions as $position) {
+            foreach($free_hallway_positions as $hallway_position) {
                 $next_burrow = clone($burrow);
-                $next_burrow->move_from_room_to_hallway($room, $position);
+                $next_burrow->move_from_room_to_hallway($room, $amphipod_position, $hallway_position);
                 if (isset($visited[$next_burrow->id()])) continue;
                 $neighbors[] = $next_burrow;
             }
