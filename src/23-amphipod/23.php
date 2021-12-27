@@ -79,6 +79,15 @@ class State
         $this->energy_for_this_move = $moves * COST[$amphipod];
     }
 
+    public function move_from_room_to_room($room, $amphipod_position, $final_room_position)
+    {
+        $amphipod = $this->rooms[$room][$amphipod_position];
+        $this->rooms[$amphipod][$final_room_position] = $amphipod;
+        $this->rooms[$room][$amphipod_position] = null;
+        $moves = 1 + $amphipod_position + abs(ROOMS[$room] - ROOMS[$amphipod]) + 1 + $final_room_position;
+        $this->energy_for_this_move = $moves * COST[$amphipod];
+    }
+
     /* find all open positions in the hallway to the left of position */
     public function find_left_positions($start, $end = 0) : array
     {
@@ -111,29 +120,25 @@ class State
         return null;
     }
 
-    public function find_free_room_position(int $room) : ?int
-    {
-        for($i=count($this->rooms[$room])-1; $i>=0; $i--) {
-            if ($this->rooms[$room][$i] === null) return $i;
-            if ($this->rooms[$room][$i] !== $room) return null;
-        }
-        return null;
-    }
-
     public function amphipods_that_can_go_home() : array
     {
         $amphipods = [];
 
         foreach($this->hallway as $amphipod_position => $amphipod) {
-            /* nothing to move from this position to a room */
-            if ($amphipod === null || $amphipod === false || $this->hallway_blocked($amphipod_position, ROOMS[$amphipod])) continue;
+            /* no amphipod on this position */
+            if ($amphipod === null || $amphipod === false) continue;
 
-            /* find a free spot in the room */
-            if (($room_position = $this->find_free_room_position($amphipod)) === null) continue;
+            if (($room_position = $this->amphipod_can_go_home($amphipod_position, $amphipod)) === null) continue;
 
             $amphipods[] = [$amphipod_position, $room_position];
         }
         return $amphipods;
+    }
+
+    public function amphipod_can_go_home(int $from, int $amphipod) : ?int
+    {
+        if ($this->hallway_blocked($from, ROOMS[$amphipod])) return null;
+        return $this->find_free_room_position($amphipod);
     }
 
     /* check to see if there is an obstacle in the hallway between 2 positions */
@@ -144,6 +149,15 @@ class State
             if ($this->hallway[$i] !== null && $this->hallway[$i] !== false) return true;
         }
         return false;
+    }
+
+    public function find_free_room_position(int $room) : ?int
+    {
+        for($i=count($this->rooms[$room])-1; $i>=0; $i--) {
+            if ($this->rooms[$room][$i] === null) return $i;
+            if ($this->rooms[$room][$i] !== $room) return null;
+        }
+        return null;
     }
 
     /* string representation of this state, needed for dijkstra */
@@ -206,28 +220,31 @@ class Burrow
     {
         $neighbors = [];
 
-        /* move from room to hallway */
-        foreach($burrow->rooms as $room => $ap) {
+        /* move from room */
+        foreach($burrow->rooms as $room => $amphipod) {
             /* no amphipods that need to leave */
             if (($amphipod_position = $burrow->amphipod_that_needs_to_move_out_of_room($room)) === null) continue;
 
+            /* can we move directly to our final room? */
+            // $final_room_position = $burrow->amphipod_can_go_home(ROOMS[$room], $amphipod_position);
+
             $free_hallway_positions = array_merge($burrow->find_left_positions(ROOMS[$room]),
-                                                  $burrow->find_right_positions(ROOMS[$room]));
+                $burrow->find_right_positions(ROOMS[$room]));
 
             foreach($free_hallway_positions as $hallway_position) {
                 $next_burrow = clone($burrow);
                 $next_burrow->move_from_room_to_hallway($room, $amphipod_position, $hallway_position);
-                if (isset($visited[$next_burrow->id()])) continue;
-                $neighbors[] = $next_burrow;
+                if (!isset($visited[$next_burrow->id()])) $neighbors[] = $next_burrow;
             }
         }
+
         /* move from hallway to room */
         foreach($burrow->amphipods_that_can_go_home() as list($amphipod_position, $room_position)) {
             $next_burrow = clone($burrow);
             $next_burrow->move_from_hallway_to_room($amphipod_position, $room_position);
-            if (isset($visited[$next_burrow->id()])) continue;
-            $neighbors[] = $next_burrow;
+            if (!isset($visited[$next_burrow->id()])) $neighbors[] = $next_burrow;;
         }
+
         return $neighbors;
     }
 
