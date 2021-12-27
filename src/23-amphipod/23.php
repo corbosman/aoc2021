@@ -229,7 +229,7 @@ class Burrow
             // $final_room_position = $burrow->amphipod_can_go_home(ROOMS[$room], $amphipod_position);
 
             $free_hallway_positions = array_merge($burrow->find_left_positions(ROOMS[$room]),
-                $burrow->find_right_positions(ROOMS[$room]));
+                                                  $burrow->find_right_positions(ROOMS[$room]));
 
             foreach($free_hallway_positions as $hallway_position) {
                 $next_burrow = clone($burrow);
