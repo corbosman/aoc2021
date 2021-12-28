@@ -36,7 +36,7 @@ Let's look at a block where they add a positive number:
 
 So this whole code block says: Multiple z by 26, then add the input and add 12. The 12 is a static number coming from ```add y 12```. This means this whole block can now be written as:
 
-###```Z = 26 * Z + INPUT + 12``` 
+### ```Z = 26 * Z + INPUT + 12``` 
 
 Then this Z is taken to the next block. So it's rapidly increasing 26 fold every step. But it has to go to zero, so the negative blocks should bring the value back down. Let's look at the other block
 
