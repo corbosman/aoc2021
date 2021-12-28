@@ -62,7 +62,7 @@ Then this Z is taken to the next block. So it's rapidly increasing 26 fold every
 | mul y x | w=input x=(0 or 1) ***y=(0 or input+12)*** z=(1z/26 or 26z/26)| ```2 options for y```
 | add z y | w=input x=(0 or 1) y=(0 or input+12) ***z=(1z/26+0 or 26z/26+input+12)*** | ```z can be one of 2 options, again depending on initial z input and a single y value```
 
-###```Z = Z / 26``` or ```Z = Z + input + 12```
+### ```Z = Z / 26``` or ```Z = Z + input + 12```
 
 The second form does not bring the value of Z down. So my guess is that we need to make sure the first form needs to be true. Backtracking this means Y=1 => Y=0 => X=0 => X=1 => w==x => ```W = (Z % 26)-16```. 
 
