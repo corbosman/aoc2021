@@ -15,24 +15,24 @@ Let's look at a block where they add a positive number:
 
 | OPCODE | STATE |      COMMENT |
 | --- | ----------- | -------   |
-| inp w   | <u>***w=input***</u> x y z       | ```take input```
-| mul x 0 | w=input <u>***x=0***</u> y z     | ```set x to 0```
-| add x z | w=input <u>***x=z***</u> y z     | ```set x to z```
-| mod x 26 | w=input <u>***x=z%26***</u> y z |  ```x=z%26```
+| inp w   | ***w=input*** x y z       | ```take input```
+| mul x 0 | w=input ***x=0*** y z     | ```set x to 0```
+| add x z | w=input ***x=z*** y z     | ```set x to z```
+| mod x 26 | w=input ***x=z%26*** y z |  ```x=z%26```
 | div z 1  | w=input x=z%26 y z |  ```nop??```
-| add x 10 | w=input <u>***x=(z%26)+10***</u> y z | ```add 10 to x```                            
-| eql x w | w=input <u>***x=0***</u> y z |  ```X is at least 10, 10 > input => X=0)```
-| eql x 0 | w=input <u>***x=1***</u> y z |  ```(if x==0 x=1)```
-| mul y 0 | w=input x=1 <u>***y=0***</u> z | ```set y to 0```
-| add y 25 | w=input x=1 <u>***y=25***</u> z | ```set y to 25```
-| mul y x | w=input x=1 <u>***y=25***</u> z | ```nop, because x=1```
-| add y 1 | w=input x=1 <u>***y=26***</u> z | ```add 1 to y```
-| mul z y | w=input x=1 y=26 <u>***z=26z***</u> | ```multiple z by y``` 
-| mul y 0 | w=input x=1 <u>***y=0***</u> z=26z |   ```set y to 0```
-| add y w | w=input x=1 <u>***y=input***</u> z=26z | ```y is set to input```
-| add y 12 |  w=input x=1 <u>***y=input+12***</u> z=26z |  ```y = input + 12```
+| add x 10 | w=input ***x=(z%26)+10*** y z | ```add 10 to x```                            
+| eql x w | w=input ***x=0*** y z |  ```X is at least 10, 10 > input => X=0)```
+| eql x 0 | w=input ***x=1*** y z |  ```(if x==0 x=1)```
+| mul y 0 | w=input x=1 ***y=0*** z | ```set y to 0```
+| add y 25 | w=input x=1 ***y=25*** z | ```set y to 25```
+| mul y x | w=input x=1 ***y=25*** z | ```nop, because x=1```
+| add y 1 | w=input x=1 ***y=26*** z | ```add 1 to y```
+| mul z y | w=input x=1 y=26 ***z=26z*** | ```multiple z by y``` 
+| mul y 0 | w=input x=1 ***y=0*** z=26z |   ```set y to 0```
+| add y w | w=input x=1 ***y=input*** z=26z | ```y is set to input```
+| add y 12 |  w=input x=1 ***y=input+12*** z=26z |  ```y = input + 12```
 | mul y x | w=input x=1 y=input+12 z=26z | ```nop, x is still 1 ```
-| add z y | w=input x=1 y=input+12 <u>***z=26z+input+12***</u> | ```add y zo z```
+| add z y | w=input x=1 y=input+12 ***z=26z+input+12*** | ```add y zo z```
 
 So this whole code block says: Multiple z by 26, then add the input and add 12. The 12 is a static number coming from ```add y 12```. This means this whole block can now be written as:
 
@@ -42,25 +42,25 @@ Then this Z is taken to the next block. So it's rapidly increasing 26 fold every
 
 | OPCODE | STATE |      COMMENT |
 | --- | ----------- | -------   |
-| inp w  | <u>***w=input***</u>x y z      | ```take input```
-| mul x 0 | w=input <u>***x=0***</u>y z|  ```set x to 0```          
-| add x z | w=input <u>***x=z***</u>y z     | ```set x to z```
-| mod x 26 | w=input <u>***x=z%26***</u>y z |  ```x=z%26```
+| inp w  | ***w=input*** x y z      | ```take input```
+| mul x 0 | w=input ***x=0*** y z|  ```set x to 0```          
+| add x z | w=input ***x=z*** y z     | ```set x to z```
+| mod x 26 | w=input ***x=z%26*** y z |  ```x=z%26```
 | div z 1  | w=input x=z%26 y z |  ```nop??```
-| div z 26 | w=input x=z%26 y <u>***z=z/26***</u> | ```divide z by 26```
-| add x -16 | w=input <u>***x=(z%26)-16***</u>y z=z/26 |```subtract 16 from x```
-| eql x w | w=input <u>***x=(1 or 0)***</u>y z=z/26 | ```x can be 0 or 1```
-| eql x 0  | w=input <u>***x=(0 or 1)***</u>y z=z/26 | ```x == 0 ? 1 : 0```
-| mul y 0 | w=input x=(0 or 1) <u>***y=0***</u>z=z/26  | ```set y to 0```
-| add y 25 | w=input x=(0 or 1) <u>***y=25***</u>z=z/26 | ```set y to 25```
-| mul y x | w=input x=(0 or 1) <u>***y=(0 or 25)***</u>z=z/26 | ```depending on X, y is now 0 or 25 ```
-| add y 1| w=input x=(0 or 1) <u>***y=(1 or 26)***</u>z=z/26  | ```y now 1 or 26 ```
-| mul z y | w=input x=(0 or 1) y=(1 or 26) <u>***z=(1z/26 or 26z/26)***</u>| ```2 options for z now ```
-| mul y 0 | w=input x=(0 or 1) <u>***y=0***</u>z=(1z/26 or 26z/26) | ```set y to 0```
-| add y w | w=input x=(0 or 1) <u>***y=input***</u>z=(1z/26 or 26z/26) | ```set y to input```
-| add y 12 | w=input x=(0 or 1) <u>***y=input+12***</u>z=(1z/26 or 26z/26) | ```add 12 to input```
-| mul y x | w=input x=(0 or 1) <u>***y=(0 or input+12)***</u>z=(1z/26 or 26z/26)| ```2 options for y```
-| add z y | w=input x=(0 or 1) y=(0 or input+12) <u>***z=(1z/26+0 or 26z/26+input+12)***</u>| ```z can be one of 2 options, again depending on initial z input and a single y value```
+| div z 26 | w=input x=z%26 y ***z=z/26***  | ```divide z by 26```
+| add x -16 | w=input ***x=(z%26)-16*** y z=z/26 |```subtract 16 from x```
+| eql x w | w=input ***x=(1 or 0)*** y z=z/26 | ```x can be 0 or 1```
+| eql x 0  | w=input ***x=(0 or 1)*** y z=z/26 | ```x == 0 ? 1 : 0```
+| mul y 0 | w=input x=(0 or 1) ***y=0*** z=z/26  | ```set y to 0```
+| add y 25 | w=input x=(0 or 1) ***y=25*** z=z/26 | ```set y to 25```
+| mul y x | w=input x=(0 or 1) ***y=(0 or 25)*** z=z/26 | ```depending on X, y is now 0 or 25 ```
+| add y 1| w=input x=(0 or 1) ***y=(1 or 26)*** z=z/26  | ```y now 1 or 26 ```
+| mul z y | w=input x=(0 or 1) y=(1 or 26) ***z=(1z/26 or 26z/26)*** | ```2 options for z now ```
+| mul y 0 | w=input x=(0 or 1) ***y=0*** z=(1z/26 or 26z/26) | ```set y to 0```
+| add y w | w=input x=(0 or 1) ***y=input*** z=(1z/26 or 26z/26) | ```set y to input```
+| add y 12 | w=input x=(0 or 1) ***y=input+12*** z=(1z/26 or 26z/26) | ```add 12 to input```
+| mul y x | w=input x=(0 or 1) ***y=(0 or input+12)*** z=(1z/26 or 26z/26)| ```2 options for y```
+| add z y | w=input x=(0 or 1) y=(0 or input+12) ***z=(1z/26+0 or 26z/26+input+12)*** | ```z can be one of 2 options, again depending on initial z input and a single y value```
 
 ###```Z = Z / 26``` or ```Z = Z + input + 12```
 
