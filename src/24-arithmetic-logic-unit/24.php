@@ -22,22 +22,22 @@ class CrackSerial {
         $max = $part === 'a' ? 1 : 9;
 
         /* read the strategy.md for explanation of this loop */
-        foreach($this->serials($min, $max) as $w) {
+        foreach($this->serials($min, $max) as $inp) {
             $z = 0;
             $serial = [];
-            $w_index = 0;
-            foreach($alu as $step => $a) {
+            foreach($alu as $a) {
                 if ($a[0] === UPPER) {
-                    $z = ($z*26) + $w[$w_index] + $a[2];
-                    $serial[] = $w[$w_index++];
+                    $w = array_shift($inp);
+                    $z = ($z*26) + $w + $a[2];
+                    $serial[] = $w;
                 } else {
-                    $w_generated = ($z % 26) + $a[1];
-                    if ($w_generated < 1 || $w_generated > 9) continue 2;
-                    $serial[] = $w_generated;
-                    $z = floor($z / 26);
+                    $w = ($z % 26) + $a[1];
+                    if ($w < 1 || $w > 9) continue 2;
+                    $serial[] = $w;
+                    $z = (int)floor($z / 26);
                 }
             }
-            if ($z == 0) return implode('', $serial);
+            if ($z === 0) return implode('', $serial);
         }
         return "meh";
     }
