@@ -1,11 +1,10 @@
 #!/usr/bin/env php
 <?php
 use Tightenco\Collect\Support\Collection;
+require __DIR__ . '/../../vendor/autoload.php';
 
 const UPPER  = 0;   /* this is an alu block that increases the value of Z */
 const DOWNER = 1;   /* this is an alu block that decreases the value of Z */
-
-require __DIR__ . '/../../vendor/autoload.php';
 
 function load() : Collection
 {
