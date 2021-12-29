@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 require __DIR__ . '/vendor/autoload.php';
-
 use function Termwind\{render};
+$total_time = 0;
 
 $table = <<<HTML
     <div>
@@ -23,11 +23,13 @@ collect(scandir('src'))
         $files = collect(scandir("src/{$folder}"))
             ->filter(fn($i)=>str_ends_with($i, 'php'))
             ->each(function($file) use ($folder, &$table) {
+                global $total_time;
                 $output = exec(__DIR__ . "/src/{$folder}/{$file} -q", $results);
                 $folder = substr($folder, 3);
 
                 foreach($results as $result) {
                     list($answer, $time, $name) = explode(',', $result);
+                    $total_time += (int)$time;
                     $table .= <<<HTML
                     <tr class='text-center'>
                         <td class='text-center text-yellow-400'>{$name}</td>
@@ -40,6 +42,18 @@ collect(scandir('src'))
             });
     });
 $table .= <<<HTML
+        <tr>
+                          <td class='text-center text-yellow-400'></td>
+                        <td class='text-center text-yellow-400'></td>
+                        <td class='text-center text-green-400'></td>
+                        <td class='text-center text-blue-400'>---------</td>
+        </tr>
+        <tr>
+                          <td class='text-center text-yellow-400'></td>
+                        <td class='text-center text-yellow-400'></td>
+                        <td class='text-center text-green-400'></td>
+                        <td class='text-center text-blue-400'>{$total_time} ms</td>
+        </tr>
         </table>
     </div>
 HTML;
